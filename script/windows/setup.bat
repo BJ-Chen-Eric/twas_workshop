@@ -3,16 +3,20 @@ REM THE ONE THING TO RUN on Windows -- checks for Python; offers to
 REM install it via winget (y/n first) if missing entirely. If Python
 REM 3.12+ is already present, uses a side-installed 3.11 for this
 REM project's venv if available, and OFFERS to install 3.11 via winget
-REM (y/n) if it's not -- avoids a real, confirmed failure needing
-REM Microsoft C++ Build Tools (see discussion.md 2026-09-30). Earlier
-REM version of this script only checked for an existing 3.11 without
-REM ever offering to install it when 3.12+ was already on PATH -- fixed
-REM 2026-09-30 after a real run showed the gap. Then runs
-REM script\setup.py. This logic is NOT hands-on verified on Windows (no
-REM Windows machine available) -- the underlying pandas build failure it
-REM works around IS confirmed real. See docs/native_setup_guide.md.
-REM Double-clickable, or run from PowerShell/Command Prompt:
-REM script\windows\setup.bat
+REM (y/n) if it's not. Python 3.11 is a hard requirement either way
+REM (Eric, 2026-09-30: "we will need python3.11 anyway") -- if 3.11 can't
+REM be obtained automatically (winget declined or unavailable), this
+REM stops with manual python.org instructions rather than silently
+REM continuing with 3.12+, since that's already confirmed to fail
+REM needing Microsoft C++ Build Tools most computers don't have (see
+REM discussion.md 2026-09-30). Earlier version of this script only
+REM checked for an existing 3.11 without ever offering to install it
+REM when 3.12+ was already on PATH -- fixed the same day after a real
+REM run showed the gap. Then runs script\setup.py. This logic is NOT
+REM hands-on verified on Windows (no Windows machine available) -- the
+REM underlying pandas build failure it works around IS confirmed real.
+REM See docs/native_setup_guide.md. Double-clickable, or run from
+REM PowerShell/Command Prompt: script\windows\setup.bat
 
 cd /d "%~dp0..\.."
 
@@ -83,7 +87,7 @@ REM all -- if 3.12+ was already on PATH, it skipped straight past that
 REM offer and just printed a passive suggestion, never actually
 REM installing 3.11. Fixed: offer it here too, the same way.
 where winget >nul 2>nul
-if %ERRORLEVEL% NEQ 0 goto :warn_and_proceed
+if %ERRORLEVEL% NEQ 0 goto :need_311_manually
 
 echo.
 echo %PYVER% is already installed, but pandas needs Microsoft C++ Build
@@ -94,7 +98,7 @@ echo ==================================================================
 set /p REPLY="Install Python 3.11 via winget now? [y/N] "
 if /i "%REPLY%"=="y" goto :install_311_now
 if /i "%REPLY%"=="yes" goto :install_311_now
-goto :warn_and_proceed
+goto :need_311_manually
 
 :install_311_now
 winget install -e --id Python.Python.3.11
@@ -108,12 +112,29 @@ echo https://www.python.org/downloads/release/python-3119/ instead.
 pause
 exit /b 1
 
-:warn_and_proceed
+:need_311_manually
+REM Eric, 2026-09-30: "we will need python3.11 anyway" -- don't just
+REM warn and quietly continue with 3.12+ here, since that's already
+REM confirmed to fail on a real machine (pandas needs a C++ compiler
+REM most computers don't have). Whether the user declined the winget
+REM offer or winget itself isn't available, stop and point at the
+REM actual fix instead of wasting time on a build we know will fail.
 echo.
-echo NOTE: proceeding with %PYVER% as-is. If setup below fails
-echo mentioning "Microsoft Visual C++ 14.0", install Python 3.11
-echo (winget install -e --id Python.Python.3.11) and re-run this script
-echo -- see docs/native_setup_guide.md.
+echo ==================================================================
+echo %PYVER% is installed, but this workshop needs Python 3.11 to avoid
+echo a pandas build failure that needs a C/C++ compiler most computers
+echo don't have (see docs/native_setup_guide.md).
+echo.
+echo 1. Go to https://www.python.org/downloads/release/python-3119/ and
+echo    download the Windows installer for Python 3.11.
+echo 2. Run the installer. ON THE FIRST SCREEN, CHECK THE BOX THAT SAYS
+echo    "Add python.exe to PATH".
+echo 3. Close this window, open a new one, and run this script again --
+echo    it'll then find and use 3.11 automatically. Your existing %PYVER%
+echo    is untouched either way.
+echo ==================================================================
+pause
+exit /b 1
 
 :run_setup
 python script\setup.py

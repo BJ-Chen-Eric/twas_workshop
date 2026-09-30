@@ -171,10 +171,13 @@ that isn't from a registered publisher — not a sign anything's wrong.)
   did this when no Python at all was found, silently skipping the offer
   whenever 3.12+ was already on PATH, which is the actual case on a
   real machine and was found and fixed 2026-09-30; (3) if winget isn't
-  available either, print a warning and proceed with 3.12+ anyway. This
-  three-tier logic is **untested hands-on** (no Windows machine
-  available to verify the batch script runs as written). If it still
-  doesn't catch it: install **Python 3.11** manually
+  available, or you decline the offer, it **stops with manual
+  python.org install instructions instead of silently continuing with
+  3.12+** — that build is already confirmed to fail, so there's no
+  point letting it run just to hit the same error. This three-tier
+  logic is **untested hands-on** (no Windows machine available to
+  verify the batch script runs as written). If it still doesn't catch
+  it: install **Python 3.11** manually
   (`winget install -e --id Python.Python.3.11`, pandas has a ready-made
   package for it, nothing to compile) and re-run setup with
   `py -3.11 script\setup.py` specifically — don't spend workshop time
