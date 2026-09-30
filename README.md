@@ -7,20 +7,35 @@ summary statistics.
 
 ## Get Started
 
-New to the command line? No problem — [`docs/native_setup_guide.md`](./docs/native_setup_guide.md)
-walks through everything from scratch: downloading this folder, opening a
+**New to the command line, or unsure how to even download this?** Start
+at [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) — it
+walks through everything from zero: downloading this repo, opening a
 terminal, and running the one setup script. Works on Mac, Windows, and
 Linux.
 
-Quick version, if you're already comfortable with a terminal:
+### 1. Download this repo
+Click the green **`<> Code`** button above → **`Download ZIP`**, then
+unzip it (or `git clone` this repo, if you already use git).
+
+### 2. Open a terminal in the unzipped folder
+See [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) Step 2
+if you're not sure how — it covers Mac, Windows, and Linux.
+
+### 3. Run setup, then the analysis
+**Mac**:
 ```bash
-python3 script/setup.py        # one script: creates a venv, installs
-                                # packages, downloads the toy data, and
-                                # checks everything's ready
+bash script/mac/setup.sh        # one script: checks Python, creates a
+                                 # venv, installs packages, downloads
+                                 # toy data, checks everything's ready
 bash script/run_native.sh       # runs the actual analysis
 ```
-(Windows: `python script\setup.py`, then
-`venv\Scripts\python.exe script\run_native.py`.)
+**Windows**:
+```powershell
+script\windows\setup.bat
+venv\Scripts\python.exe script\run_native.py
+```
+(Prefer double-clicking to typing? `script/mac/setup.command` and
+`script\windows\setup.bat` both work that way too — see the guide.)
 
 ## What You'll Do
 
@@ -34,7 +49,8 @@ method actually does and how to read the output.
 
 - `docs/native_setup_guide.md` — full setup walkthrough
 - `docs/method_overview.md` — what S-PrediXcan does and why
-- `script/setup.py` — one-step setup (venv + packages + toy data + check)
+- `script/mac/setup.sh` (+ `setup.command`) — one-step setup on Mac
+- `script/windows/setup.bat` — one-step setup on Windows
 - `script/run_native.py` / `run_native.sh` — runs the analysis
 - `tools/MetaXcan-master/` — the S-PrediXcan toolkit itself
   ([hakyimlab/MetaXcan](https://github.com/hakyimlab/MetaXcan))
