@@ -1,13 +1,16 @@
 @echo off
-REM THE ONE THING TO RUN on Windows -- checks for Python; if missing,
-REM offers to install it via winget (y/n first). If Python 3.12+ is
-REM already present, prefers a side-installed 3.11 for this project's
-REM venv if available (avoids a real, confirmed failure needing
-REM Microsoft C++ Build Tools -- see discussion.md 2026-09-30). Then
-REM runs script\setup.py. The Python-detection/3.11-preference logic is
-REM written but NOT hands-on verified on Windows (no Windows machine
-REM available) -- the underlying pandas build failure it works around
-REM IS confirmed real, 2026-09-30. See docs/native_setup_guide.md.
+REM THE ONE THING TO RUN on Windows -- checks for Python; offers to
+REM install it via winget (y/n first) if missing entirely. If Python
+REM 3.12+ is already present, uses a side-installed 3.11 for this
+REM project's venv if available, and OFFERS to install 3.11 via winget
+REM (y/n) if it's not -- avoids a real, confirmed failure needing
+REM Microsoft C++ Build Tools (see discussion.md 2026-09-30). Earlier
+REM version of this script only checked for an existing 3.11 without
+REM ever offering to install it when 3.12+ was already on PATH -- fixed
+REM 2026-09-30 after a real run showed the gap. Then runs
+REM script\setup.py. This logic is NOT hands-on verified on Windows (no
+REM Windows machine available) -- the underlying pandas build failure it
+REM works around IS confirmed real. See docs/native_setup_guide.md.
 REM Double-clickable, or run from PowerShell/Command Prompt:
 REM script\windows\setup.bat
 
@@ -70,22 +73,47 @@ REM this project's venv instead.
 python -c "import sys; sys.exit(0 if sys.version_info>=(3,12) else 1)" >nul 2>nul
 if %ERRORLEVEL% NEQ 0 goto :run_setup
 
-py -3.11 --version >nul 2>nul
-if %ERRORLEVEL% EQU 0 (
-    echo.
-    echo Using Python 3.11 for this project's venv instead of %PYVER%
-    echo -- pandas has a ready-made package for 3.11, so nothing needs
-    echo compiling. Your existing Python installation is untouched.
-    py -3.11 script\setup.py
-    goto :end
-)
+call :use_311_if_present
+if %ERRORLEVEL% EQU 0 goto :end
+
+REM 3.11 isn't already there. This is where the ORIGINAL version of this
+REM script fell short (found 2026-09-30, real Windows run): it only ever
+REM OFFERED to install Python via winget when NO Python was found at
+REM all -- if 3.12+ was already on PATH, it skipped straight past that
+REM offer and just printed a passive suggestion, never actually
+REM installing 3.11. Fixed: offer it here too, the same way.
+where winget >nul 2>nul
+if %ERRORLEVEL% NEQ 0 goto :warn_and_proceed
 
 echo.
-echo NOTE: %PYVER% detected. pandas may need Microsoft C++ Build Tools
-echo to install on Windows for Python 3.12+, which most computers don't
-echo have. If setup below fails mentioning "Microsoft Visual C++ 14.0",
-echo install Python 3.11 (winget install -e --id Python.Python.3.11)
-echo and re-run this script -- see docs/native_setup_guide.md.
+echo %PYVER% is already installed, but pandas needs Microsoft C++ Build
+echo Tools to build on Windows Python 3.12+, which most computers don't
+echo have. Installing Python 3.11 alongside it (not replacing it) avoids
+echo this entirely -- pandas has a ready-made package for 3.11.
+echo ==================================================================
+set /p REPLY="Install Python 3.11 via winget now? [y/N] "
+if /i "%REPLY%"=="y" goto :install_311_now
+if /i "%REPLY%"=="yes" goto :install_311_now
+goto :warn_and_proceed
+
+:install_311_now
+winget install -e --id Python.Python.3.11
+call :use_311_if_present
+if %ERRORLEVEL% EQU 0 goto :end
+echo.
+echo Install finished but the py launcher still can't find 3.11. Close
+echo this window, open a new one, and run this script again -- if it
+echo still doesn't pick it up, install manually from
+echo https://www.python.org/downloads/release/python-3119/ instead.
+pause
+exit /b 1
+
+:warn_and_proceed
+echo.
+echo NOTE: proceeding with %PYVER% as-is. If setup below fails
+echo mentioning "Microsoft Visual C++ 14.0", install Python 3.11
+echo (winget install -e --id Python.Python.3.11) and re-run this script
+echo -- see docs/native_setup_guide.md.
 
 :run_setup
 python script\setup.py
@@ -93,3 +121,18 @@ python script\setup.py
 :end
 echo.
 pause
+exit /b 0
+
+:use_311_if_present
+REM Helper: if "py -3.11" resolves, run setup with it and return success
+REM (errorlevel 0); otherwise return failure (errorlevel 1) and do
+REM nothing else. Called with "call" so the caller can react to the
+REM result instead of the whole script ending here.
+py -3.11 --version >nul 2>nul
+if %ERRORLEVEL% NEQ 0 exit /b 1
+echo.
+echo Using Python 3.11 for this project's venv instead of %PYVER% --
+echo pandas has a ready-made package for 3.11, so nothing needs
+echo compiling. Your existing Python installation is untouched.
+py -3.11 script\setup.py
+exit /b 0

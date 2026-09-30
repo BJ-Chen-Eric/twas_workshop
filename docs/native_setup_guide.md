@@ -163,17 +163,23 @@ that isn't from a registered publisher — not a sign anything's wrong.)
 - **On Windows, Python 3.12+ fails with "Microsoft Visual C++ 14.0 or
   greater is required"**: **confirmed on a real Windows run,
   2026-09-30** — building pandas from source needs a C/C++ compiler
-  (Microsoft C++ Build Tools), which most computers don't have. `setup.bat`
-  now checks for this and automatically uses a side-installed Python 3.11
-  for the venv if one's available (via the `py` launcher), and prints a
-  clear message either way — but this detection logic itself is
-  **untested hands-on** (no Windows machine available to verify the
-  batch script runs as written). If it doesn't catch it automatically:
-  install **Python 3.11** (`winget install -e --id Python.Python.3.11`,
-  pandas has a ready-made package for it, nothing to compile) and
-  re-run setup with `py -3.11 script\setup.py` specifically — don't
-  spend workshop time installing a C++ compiler. *(You don't need to
-  delete the `venv` folder yourself first — as of 2026-09-30, setup now
+  (Microsoft C++ Build Tools), which most computers don't have.
+  `setup.bat` now handles this in three tiers: (1) use a side-installed
+  Python 3.11 for the venv automatically if one's already there (via
+  the `py` launcher); (2) if not, **actively offer to install 3.11 via
+  winget right there** (y/n) — an earlier version of this script only
+  did this when no Python at all was found, silently skipping the offer
+  whenever 3.12+ was already on PATH, which is the actual case on a
+  real machine and was found and fixed 2026-09-30; (3) if winget isn't
+  available either, print a warning and proceed with 3.12+ anyway. This
+  three-tier logic is **untested hands-on** (no Windows machine
+  available to verify the batch script runs as written). If it still
+  doesn't catch it: install **Python 3.11** manually
+  (`winget install -e --id Python.Python.3.11`, pandas has a ready-made
+  package for it, nothing to compile) and re-run setup with
+  `py -3.11 script\setup.py` specifically — don't spend workshop time
+  installing a C++ compiler. *(You don't need to delete the `venv`
+  folder yourself first — as of 2026-09-30, setup now
   removes it automatically whenever installation fails partway through,
   so re-running always starts clean.)*
 - *(2026-09-30: `bgen-reader`/`cyvcf2` were removed from

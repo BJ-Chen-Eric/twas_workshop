@@ -153,12 +153,16 @@ Step 3 的腳本不管打字執行還是雙擊,做的事完全一樣:
 - **Windows 上 Python 3.12+ 會出現「Microsoft Visual C++ 14.0 or
   greater is required」的錯誤**:**2026-09-30 在真的 Windows 機器上
   確認過**——從原始碼編譯 pandas 需要一個 C/C++ 編譯器(Microsoft
-  C++ Build Tools),大部分電腦都沒裝。`setup.bat` 現在會檢查這個
-  情況,如果有透過 `py` launcher 裝的 3.11 就自動改用它來建立
-  venv,不管有沒有都會印出清楚的說明——但這段偵測邏輯本身**還沒
-  實際測試過**(沒有 Windows 機器可以確認這支 batch 腳本照寫的邏輯
-  真的能跑)。如果它沒自動抓到:改裝 **Python 3.11**
-  (`winget install -e --id Python.Python.3.11`,pandas 有現成的
+  C++ Build Tools),大部分電腦都沒裝。`setup.bat` 現在分三層處理:
+  (1) 如果已經有透過 `py` launcher 裝的 3.11,自動改用它來建立
+  venv;(2) 如果沒有,**主動在現場提議透過 winget 安裝
+  3.11**(先問是/否)——這支腳本之前的版本只有在完全找不到 Python
+  時才會提議安裝,只要 3.12+ 已經裝在電腦上就會悄悄跳過這個提議,
+  而這剛好就是實際機器上真正發生的情況,2026-09-30 發現並修好了;
+  (3) 如果連 winget 都沒有,印出警告然後照樣用 3.12+ 繼續執行。這三層
+  邏輯本身**還沒實際測試過**(沒有 Windows 機器可以確認這支 batch
+  腳本照寫的邏輯真的能跑)。如果它還是沒抓到:手動改裝 **Python
+  3.11**(`winget install -e --id Python.Python.3.11`,pandas 有現成的
   安裝套件,完全不用編譯),然後明確指定用
   `py -3.11 script\setup.py` 重新執行 setup——不要在
   現場花時間裝 C++ 編譯器。*(不用自己先手動刪
