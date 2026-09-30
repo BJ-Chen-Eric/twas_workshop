@@ -170,9 +170,12 @@ that isn't from a registered publisher — not a sign anything's wrong.)
   **untested hands-on** (no Windows machine available to verify the
   batch script runs as written). If it doesn't catch it automatically:
   install **Python 3.11** (`winget install -e --id Python.Python.3.11`,
-  pandas has a ready-made package for it, nothing to compile), delete
-  the `venv` folder, and re-run setup with `py -3.11 script\setup.py`
-  specifically — don't spend workshop time installing a C++ compiler.
+  pandas has a ready-made package for it, nothing to compile) and
+  re-run setup with `py -3.11 script\setup.py` specifically — don't
+  spend workshop time installing a C++ compiler. *(You don't need to
+  delete the `venv` folder yourself first — as of 2026-09-30, setup now
+  removes it automatically whenever installation fails partway through,
+  so re-running always starts clean.)*
 - *(2026-09-30: `bgen-reader`/`cyvcf2` were removed from
   `requirements.txt` entirely — they were never actually used by
   anything this workshop runs (only needed for a different,

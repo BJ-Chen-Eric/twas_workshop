@@ -16,6 +16,7 @@ Usage (from a terminal, after downloading/unzipping this repo):
 Safe to re-run — every step skips work that's already done.
 """
 import os
+import shutil
 import subprocess
 import sys
 import urllib.request
@@ -108,6 +109,15 @@ def create_venv():
     run([sys.executable, "-m", "venv", VENV_DIR])
 
 
+def remove_venv(reason):
+    step(f"Removing ./venv ({reason})")
+    if os.path.exists(VENV_DIR):
+        shutil.rmtree(VENV_DIR)
+        print(f"    Removed {VENV_DIR}.")
+    else:
+        print("    Already gone.")
+
+
 def install_requirements():
     step("Installing required packages into ./venv")
     req_file = os.path.join(WORKSHOP_DIR, "requirements.txt")
@@ -142,7 +152,9 @@ def install_requirements():
         # the setuptools/Cython fixes above can't substitute for and
         # most computers don't have. No fix for this in-place — the
         # real fix is a different Python. Tell the user exactly what to
-        # do instead of just letting the raw traceback print.
+        # do instead of just letting the raw traceback print. (The venv
+        # gets cleaned up automatically by __main__'s wrapper below, so
+        # this message doesn't need to mention deleting it manually.)
         if IS_WINDOWS:
             print("\n" + "=" * 66)
             print("pandas couldn't be built from source. On Windows, Python")
@@ -152,8 +164,7 @@ def install_requirements():
             print("Easiest fix: install Python 3.11 instead (pandas has a")
             print("ready-made package for it, nothing to compile):")
             print("    winget install -e --id Python.Python.3.11")
-            print("then delete the venv folder and re-run setup using it")
-            print("specifically:")
+            print("then re-run setup using it specifically:")
             print("    py -3.11 script\\setup.py")
             print("=" * 66)
         raise
@@ -231,7 +242,16 @@ if __name__ == "__main__":
     print("TWAS Workshop setup — this will take a few minutes the first time.")
     check_python_version()
     create_venv()
-    install_requirements()
+    # If package installation fails partway through, the venv is left in
+    # a half-set-up state — create_venv() would then skip recreating it
+    # on the next run (since VENV_PYTHON already exists), silently
+    # reusing something broken. Eric, 2026-09-30: remove it automatically
+    # on failure instead of requiring a manual delete before re-running.
+    try:
+        install_requirements()
+    except subprocess.CalledProcessError:
+        remove_venv("setup failed partway through — starting clean next time")
+        sys.exit(1)
     download_toy_data()
     run_check()
     print("\nSetup finished. Next: run the workshop script —")
