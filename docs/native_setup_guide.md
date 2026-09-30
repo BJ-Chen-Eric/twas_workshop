@@ -160,15 +160,19 @@ that isn't from a registered publisher — not a sign anything's wrong.)
   the venv, then builds pandas with `--no-build-isolation`. If you still
   hit this on Mac/Linux, something changed since — flag it rather than
   trying to self-resolve mid-workshop.
-- **On Windows specifically, Python 3.12+ can fail even with the fix
-  above**: building pandas from source needs a C/C++ compiler
-  (Microsoft C++ Build Tools), which the Mac/Linux fix doesn't need to
-  worry about but Windows does, and most computers don't have one
-  installed by default. **Untested as of 2026-09-30** — no Windows
-  machine available to verify either way. The real fix if you hit this:
-  install **Python 3.11** instead (pandas has a ready-made package for
-  it, so nothing needs compiling) and re-run Step 3 — don't spend
-  workshop time trying to install a C++ compiler on the spot.
+- **On Windows, Python 3.12+ fails with "Microsoft Visual C++ 14.0 or
+  greater is required"**: **confirmed on a real Windows run,
+  2026-09-30** — building pandas from source needs a C/C++ compiler
+  (Microsoft C++ Build Tools), which most computers don't have. `setup.bat`
+  now checks for this and automatically uses a side-installed Python 3.11
+  for the venv if one's available (via the `py` launcher), and prints a
+  clear message either way — but this detection logic itself is
+  **untested hands-on** (no Windows machine available to verify the
+  batch script runs as written). If it doesn't catch it automatically:
+  install **Python 3.11** (`winget install -e --id Python.Python.3.11`,
+  pandas has a ready-made package for it, nothing to compile), delete
+  the `venv` folder, and re-run setup with `py -3.11 script\setup.py`
+  specifically — don't spend workshop time installing a C++ compiler.
 - *(2026-09-30: `bgen-reader`/`cyvcf2` were removed from
   `requirements.txt` entirely — they were never actually used by
   anything this workshop runs (only needed for a different,

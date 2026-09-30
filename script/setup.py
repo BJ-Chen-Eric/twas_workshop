@@ -132,8 +132,31 @@ def install_requirements():
     # <3 because pandas 1.5.3 predates Cython 3's breaking changes.
     run([VENV_PYTHON, "-m", "pip", "install", "-q", "setuptools<81", "wheel"])
     run([VENV_PYTHON, "-m", "pip", "install", "-q", "numpy<2.0", "Cython<3"])
-    run([VENV_PYTHON, "-m", "pip", "install", "-q",
-         "--no-build-isolation", "pandas<2.0"])
+    try:
+        run([VENV_PYTHON, "-m", "pip", "install", "-q",
+             "--no-build-isolation", "pandas<2.0"])
+    except subprocess.CalledProcessError:
+        # Confirmed on a real Windows run, 2026-09-30: "Microsoft Visual
+        # C++ 14.0 or greater is required" — Windows Python 3.12+ needs
+        # an actual C/C++ compiler to build pandas from source, which
+        # the setuptools/Cython fixes above can't substitute for and
+        # most computers don't have. No fix for this in-place — the
+        # real fix is a different Python. Tell the user exactly what to
+        # do instead of just letting the raw traceback print.
+        if IS_WINDOWS:
+            print("\n" + "=" * 66)
+            print("pandas couldn't be built from source. On Windows, Python")
+            print("3.12+ needs Microsoft C++ Build Tools to do this — most")
+            print("computers don't have it installed.")
+            print()
+            print("Easiest fix: install Python 3.11 instead (pandas has a")
+            print("ready-made package for it, nothing to compile):")
+            print("    winget install -e --id Python.Python.3.11")
+            print("then delete the venv folder and re-run setup using it")
+            print("specifically:")
+            print("    py -3.11 script\\setup.py")
+            print("=" * 66)
+        raise
     run([VENV_PYTHON, "-m", "pip", "install", "-q", "-r", req_file])
 
 

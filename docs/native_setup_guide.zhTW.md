@@ -150,13 +150,18 @@ Step 3 的腳本不管打字執行還是雙擊,做的事完全一樣:
   `setuptools<81`、`numpy`、`Cython<3` 釘進 venv,再用
   `--no-build-isolation` 編譯 pandas。如果在 Mac/Linux 上還是碰到,
   代表之後又有變化——直接回報,不要當場自己嘗試解決。
-- **在 Windows 上,即使有上面的修法,Python 3.12+ 還是可能失敗**:
-  從原始碼編譯 pandas 需要一個 C/C++ 編譯器(Microsoft C++ Build
-  Tools),這是 Mac/Linux 的修法不用擔心、但 Windows 需要的東西,而且
-  大部分電腦預設都沒裝。**截至 2026-09-30 還沒驗證過**——沒有
-  Windows 機器可以測試。真正的解法如果碰到這個:改裝 **Python
-  3.11**(pandas 有現成的安裝套件,完全不用編譯),再重跑一次
-  Step 3——不要在現場花時間裝 C++ 編譯器。
+- **Windows 上 Python 3.12+ 會出現「Microsoft Visual C++ 14.0 or
+  greater is required」的錯誤**:**2026-09-30 在真的 Windows 機器上
+  確認過**——從原始碼編譯 pandas 需要一個 C/C++ 編譯器(Microsoft
+  C++ Build Tools),大部分電腦都沒裝。`setup.bat` 現在會檢查這個
+  情況,如果有透過 `py` launcher 裝的 3.11 就自動改用它來建立
+  venv,不管有沒有都會印出清楚的說明——但這段偵測邏輯本身**還沒
+  實際測試過**(沒有 Windows 機器可以確認這支 batch 腳本照寫的邏輯
+  真的能跑)。如果它沒自動抓到:改裝 **Python 3.11**
+  (`winget install -e --id Python.Python.3.11`,pandas 有現成的
+  安裝套件,完全不用編譯),刪掉 `venv` 資料夾,然後明確指定用
+  `py -3.11 script\setup.py` 重新執行 setup——不要在
+  現場花時間裝 C++ 編譯器。
 - *(2026-09-30:`bgen-reader`/`cyvcf2` 已經整個從 `requirements.txt`
   移除——這個 workshop 實際上從來沒用過它們(只有另一條個人層級
   基因型的 pipeline 才需要),而且兩個在 Python 3.12/這個平台上都有
