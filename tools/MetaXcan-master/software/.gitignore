@@ -1,13 +1,21 @@
 .idea
 *.pyc
-data*
-intermediate*
-results*
-forensics*
-kk*
-_kk*
-support_data*
-build*
+# Trailing "/" anchors these to directories only. Without it, and with
+# git's core.ignorecase=true (the default on case-insensitive
+# filesystems like macOS/Windows), "data*" etc. also silently matched
+# real source files -- e.g. metax/misc/DataFrameStreamer.py,
+# metax/DataSet.py, metax/DataSetSNP.py, BuildExpressionProduct.py --
+# which then never made it into the published repo. Found 2026-09-30
+# via a real ImportError on a Windows run; those 4 files were
+# force-added back. Fixed here so it can't happen again for new files.
+data*/
+intermediate*/
+results*/
+forensics*/
+kk*/
+_kk*/
+support_data*/
+build*/
 
 _prof
 _scripts
