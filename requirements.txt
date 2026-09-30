@@ -1,0 +1,18 @@
+# Exact package set proven to work for S-PrediXcan — validated on Mac
+# (Python 3.9) and Linux (Python 3.10), byte-identical output both times.
+# Pin rationale: numpy 2.x / pandas 2.x break the MetaXcan-vintage
+# codebase (see docs/twas_pipeline_reference.md).
+# The pandas-1.5.3-on-Python-3.12+ build issue from earlier setups is
+# resolved as of 2026-09-30 — see script/setup.py's
+# install_requirements(). bgen-reader/cyvcf2 (and dask) were removed the
+# same day: not used anywhere in the toy workshop's actual code path
+# (only needed for individual-level genotype input, which this workshop
+# doesn't use), and neither could actually work here anyway on this
+# platform/Python version. See docs/native_setup_guide.md's
+# Troubleshooting section if setup still fails.
+numpy<2.0
+pandas<2.0
+scipy
+patsy
+h5py
+sqlalchemy<2.0

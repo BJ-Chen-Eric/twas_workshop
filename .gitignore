@@ -1,0 +1,14 @@
+# Created by script/setup.py when a participant runs it — regenerable,
+# never source content.
+/venv/
+/tissue_twas_weight/
+/celltype_twas_weight/
+/gwas_ss/
+/out/
+/tissue.txt
+/celltype.txt
+
+# Standard hygiene
+__pycache__/
+*.pyc
+.DS_Store
