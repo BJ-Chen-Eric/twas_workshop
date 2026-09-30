@@ -1,9 +1,27 @@
 # TWAS Workshop
 
-A hands-on introduction to transcriptome-wide association study (TWAS)
-analysis — using **S-PrediXcan** to test whether a gene's genetically
-predicted expression is associated with a trait, directly from GWAS
-summary statistics.
+**No bioinformatics background needed — this README assumes none.**
+
+## In plain terms
+
+Small differences in your DNA can affect how *active* a gene is — how
+much of its protein product your cells actually make. This workshop
+asks a simple question: **is a gene's activity level linked to a
+disease or trait?** That's useful because it's one of the first steps
+researchers take to figure out which genes might actually matter for a
+condition, out of the ~20,000 genes in the human genome.
+
+The method behind this is called a **TWAS** (transcriptome-wide
+association study). The specific tool you'll run is called
+**S-PrediXcan**. You don't need to know how either works to complete
+this workshop — [`docs/method_overview.md`](./docs/method_overview.md)
+explains the method itself in plain language, if you're curious, once
+you've got it running.
+
+*(For anyone who does want the technical framing: this tests whether a
+gene's genetically **predicted** expression is associated with a trait,
+using GWAS summary statistics — no lab measurements or individual
+genetic data required.)*
 
 ## Get Started
 
@@ -39,27 +57,37 @@ venv\Scripts\python.exe script\run_native.py
 
 ## What You'll Do
 
-Run S-PrediXcan for two tissues (Spleen, Whole_Blood) against a real
-chromosome's worth of GWAS summary statistics, and get a table of
-gene-level association results for each — see
-[`docs/method_overview.md`](./docs/method_overview.md) for what the
-method actually does and how to read the output.
+You'll run the analysis for two body tissues (spleen and whole blood),
+using real (de-identified, summary-level) genetic data for one human
+chromosome. For each tissue, you'll get back a table listing genes and
+how strongly each one's activity level is linked to the trait being
+studied — the higher the significance, the more that gene stands out as
+worth a closer look. [`docs/method_overview.md`](./docs/method_overview.md)
+explains exactly how to read that output table once you have it.
+
+**How do I know it worked?** Compare your results against the reference
+answers in [`demo_out/`](./demo_out/) — if your numbers match (or come
+very close — tiny differences in the last decimal place are normal and
+expected across different computers), it worked.
 
 ## What's In This Folder
 
-- `docs/native_setup_guide.md` — full setup walkthrough
-- `docs/method_overview.md` — what S-PrediXcan does and why
+- `docs/native_setup_guide.md` — full setup walkthrough (start here)
+- `docs/method_overview.md` — what this analysis does and how to read
+  the results, in plain language
 - `script/mac/setup.sh` (+ `setup.command`) — one-step setup on Mac
 - `script/windows/setup.bat` — one-step setup on Windows
 - `script/run_native.py` / `run_native.sh` — runs the analysis
+- `demo_out/` — reference results, to check your own output against
 - `tools/MetaXcan-master/` — the S-PrediXcan toolkit itself
   ([hakyimlab/MetaXcan](https://github.com/hakyimlab/MetaXcan))
 
-## Important Interpretation Note
+## Important: What a Result Does *Not* Mean
 
-TWAS estimates the association between a trait and *genetically
-predicted* gene expression — it does not measure expression directly, and
-a significant result does not by itself prove the gene is causal: shared
-eQTLs and linkage disequilibrium with the true causal variant can
-implicate the wrong gene. Treat results as a starting point for follow-up
-investigation, not a final answer.
+A gene showing up as significant here means its *predicted* activity
+level is statistically linked to the trait — it does **not** mean that
+gene *causes* the trait. Genes sitting near each other on a chromosome
+tend to be inherited together, so this method can sometimes point at a
+gene that's simply a neighbor of the real culprit rather than the real
+culprit itself. Treat any result as a lead worth investigating further,
+never as a final answer on its own.

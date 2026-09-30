@@ -48,4 +48,5 @@ if __name__ == "__main__":
         ], check=True)
 
     print(f"\n==> Done — output written to {OUTPUT_DIR}/")
-    print("    Compare against sever_folder/demo_out/ (Eric's copy) to verify.")
+    print("    Compare against demo_out/ to verify, e.g.:")
+    print(f"    diff {OUTPUT_DIR}/Spleen_SPrediXcan.csv demo_out/Spleen_SPrediXcan.csv")

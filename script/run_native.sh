@@ -35,4 +35,5 @@ while read -r tissue || [ -n "$tissue" ]; do
 
 done < "$TISSUE_FILE"
 
-echo "==> Done — check ${OUTPUT_DIR}/ against sever_folder/demo_out/ to verify (see docs/data_requirements.md re: --gwas_N 4087 vs. 4028)."
+echo "==> Done — compare ${OUTPUT_DIR}/ against demo_out/ to verify, e.g.:"
+echo "    diff ${OUTPUT_DIR}/Spleen_SPrediXcan.csv demo_out/Spleen_SPrediXcan.csv"
