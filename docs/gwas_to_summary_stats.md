@@ -69,7 +69,7 @@ GWAS step tests each variant one at a time: does this variant's genotype
 covariates above? The result is one row per variant — effect direction,
 a test statistic (e.g. Z-score or odds ratio), and a p-value. That table
 *is* the GWAS summary-statistics file — exactly the kind of file
-`run_native.py`/`run_native.sh` reads in this workshop, just for a real
+`run_native_tissue.py`/`run_native_tissue.sh` reads in this workshop, just for a real
 trait and a real (QC'd, imputed) cohort instead of the toy setup here.
 
 ## Want the real, detailed version?

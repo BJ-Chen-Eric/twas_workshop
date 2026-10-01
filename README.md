@@ -96,6 +96,10 @@ statistical noise by design — this track exists to demonstrate the
 individual-level pipeline running end-to-end, not to show a real
 biological finding. Treat it as a bonus, not the main event.
 
+Reference output for this track (`CD14-positive_monocyte`) is also in
+[`demo_out/`](./demo_out/), same as the main tissue track — compare
+your own `out/CD14-positive_monocyte_*` files against it the same way.
+
 ## What's In This Folder
 
 - `docs/native_setup_guide.md` — full setup walkthrough (start here)

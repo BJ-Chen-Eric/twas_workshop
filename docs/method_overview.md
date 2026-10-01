@@ -23,7 +23,7 @@ data — no restricted individual-level genotypes required.
 
 ## What you're actually running
 
-`script/run_native.py` (or `run_native.sh`) loops over two tissues
+`script/run_native_tissue.py` (or `run_native_tissue.sh`) loops over two tissues
 (Spleen, Whole_Blood) and, for each, calls S-PrediXcan with:
 - a **weight model** for that tissue (`tissue_twas_weight/en_<tissue>.db`)
   and its paired **SNP covariance matrix**

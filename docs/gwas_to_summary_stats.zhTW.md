@@ -59,7 +59,7 @@ GWAS summary stats 檔案裡的列數(變異數)會比原本晶片直接測到�
 的 dosage)是不是跟性狀有關聯?結果就是每個變異一列——效應方向、
 一個測試統計量(例如 Z-score 或勝算比)、還有 p 值。這張表*就是*
 GWAS summary statistics 檔案——跟這個 workshop 裡
-`run_native.py`/`run_native.sh` 讀進去的檔案是同一種東西,只是換成
+`run_native_tissue.py`/`run_native_tissue.sh` 讀進去的檔案是同一種東西,只是換成
 真正的性狀、真正(QC 過、補值過)的世代,而不是這裡用的 toy 設定。
 
 ## 想看真正、詳細的版本嗎?

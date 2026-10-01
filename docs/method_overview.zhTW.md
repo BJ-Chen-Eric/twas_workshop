@@ -21,7 +21,7 @@ transcriptome-wide association study(TWAS)要檢定的問題——而
 
 ## 你實際在跑的東西
 
-`script/run_native.py`(或 `run_native.sh`)會針對兩個組織(Spleen、
+`script/run_native_tissue.py`(或 `run_native_tissue.sh`)會針對兩個組織(Spleen、
 Whole_Blood)各跑一次迴圈,每次都用下面這些東西呼叫 S-PrediXcan:
 - 那個組織的**權重模型**(`tissue_twas_weight/en_<tissue>.db`)以及對應
   的 **SNP covariance 矩陣**(`en_<tissue>.txt.gz`——記錄附近 SNP
