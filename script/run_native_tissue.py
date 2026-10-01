@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
 Runs S-PrediXcan for every tissue in tissue.txt, against the venv created
-by script/setup.py. Cross-platform equivalent of script/run_native.sh
+by script/setup.py. Cross-platform equivalent of script/run_native_tissue.sh
 (that one's Mac/Linux-only, bash-based) — use this one on Windows, or
 anywhere you'd rather not rely on bash.
 
 Usage (from a terminal, after script/setup.py has finished successfully):
-    venv/bin/python script/run_native.py         (Mac/Linux)
-    venv\\Scripts\\python.exe script\\run_native.py  (Windows)
+    venv/bin/python script/run_native_tissue.py         (Mac/Linux)
+    venv\\Scripts\\python.exe script\\run_native_tissue.py  (Windows)
 """
 import os
 import subprocess

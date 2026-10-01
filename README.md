@@ -42,15 +42,17 @@ if you're not sure how — it covers Mac, Windows, and Linux.
 ### 3. Run setup, then the analysis
 **Mac**:
 ```bash
-bash script/mac/setup.sh        # one script: checks Python, creates a
-                                 # venv, installs packages, downloads
-                                 # toy data, checks everything's ready
-bash script/run_native.sh       # runs the actual analysis
+bash script/mac/setup.sh             # one script: checks Python, creates a
+                                      # venv, installs packages, downloads
+                                      # toy data, checks everything's ready
+bash script/run_native_tissue.sh     # runs the main (tissue-level) analysis
+bash script/run_native_singlecell.sh # optional: cell-type track, see below
 ```
 **Windows**:
 ```powershell
 script\windows\setup.bat
-venv\Scripts\python.exe script\run_native.py
+venv\Scripts\python.exe script\run_native_tissue.py
+venv\Scripts\python.exe script\run_native_singlecell.py
 ```
 **Prefer double-clicking to typing?** `script/mac/setup.command` /
 `script\windows\setup.bat` do the exact same thing as the typed
@@ -79,6 +81,21 @@ answers in [`demo_out/`](./demo_out/) — if your numbers match (or come
 very close — tiny differences in the last decimal place are normal and
 expected across different computers), it worked.
 
+## Optional: The Cell-Type Track
+
+`run_native_singlecell.sh`/`.py` runs the same kind of analysis, but for
+individual immune cell types instead of whole tissues, using a different
+underlying method (individual-level `PrediXcan.py` instead of
+`S-PrediXcan.py`). **The genotype data behind this track is entirely
+SYNTHETIC** — simulated from real allele frequencies, but with no real
+person's actual genome and no real genetic linkage structure preserved
+(see the comments in
+[`script/run_native_singlecell.py`](./script/run_native_singlecell.py)
+for the full reasoning). Because of that, its results are close to
+statistical noise by design — this track exists to demonstrate the
+individual-level pipeline running end-to-end, not to show a real
+biological finding. Treat it as a bonus, not the main event.
+
 ## What's In This Folder
 
 - `docs/native_setup_guide.md` — full setup walkthrough (start here)
@@ -91,7 +108,11 @@ expected across different computers), it worked.
   a TWAS hit (MR, COLOC, SuSiE)
 - `script/mac/setup.sh` (+ `setup.command`) — one-step setup on Mac
 - `script/windows/setup.bat` — one-step setup on Windows
-- `script/run_native.py` / `run_native.sh` — runs the analysis
+- `script/run_native_tissue.py` / `.sh` — runs the main analysis
+- `script/run_native_singlecell.py` / `.sh` — optional cell-type track
+  (synthetic data — see above)
+- `celltype_genotype_synthetic/` — the synthetic genotype/phenotype
+  data behind the cell-type track
 - `demo_out/` — reference results, to check your own output against
 - `tools/MetaXcan-master/` — the S-PrediXcan toolkit itself
   ([hakyimlab/MetaXcan](https://github.com/hakyimlab/MetaXcan))

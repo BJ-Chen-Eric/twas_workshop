@@ -2,17 +2,59 @@
 # (Python 3.9) and Linux (Python 3.10), byte-identical output both times.
 # Pin rationale: numpy 2.x / pandas 2.x break the MetaXcan-vintage
 # codebase (see docs/twas_pipeline_reference.md).
-# The pandas-1.5.3-on-Python-3.12+ build issue from earlier setups is
-# resolved as of 2026-09-30 — see script/setup.py's
-# install_requirements(). bgen-reader/cyvcf2 (and dask) were removed the
-# same day: not used anywhere in the toy workshop's actual code path
-# (only needed for individual-level genotype input, which this workshop
-# doesn't use), and neither could actually work here anyway on this
-# platform/Python version. See docs/native_setup_guide.md's
-# Troubleshooting section if setup still fails.
+# RESOLVED 2026-09-30 (was: pandas 1.5.3 build failure on Python 3.12+,
+# see script/setup.py's install_requirements() for the pkg_resources/
+# Cython fix — confirmed working via Eric's real run: numpy, pandas,
+# scipy, patsy, h5py, sqlalchemy all import fine now).
+#
+# REMOVED 2026-09-30: bgen-reader, cyvcf2 (and dask, bgen-reader's
+# transitive dependency). Traced every import in
+# tools/MetaXcan-master/software/{SPrediXcan,M03_betas,M04_zscores}.py
+# (an AST scan, not just a grep) — none of them import bgen_reader,
+# cyvcf2, or the genotype-reading module that needs them
+# (metax/genotype/BGENGenotype.py). Those two packages are only for
+# individual-level PrediXcan.py's BGEN/VCF genotype input, which the
+# toy workshop's summary-stat path (run_native.py/.sh, only ever calling
+# SPrediXcan.py) never uses. Confirmed via a real, live install attempt
+# that neither can actually work here anyway: dask 2024.8.0's
+# dask.dataframe has a hard runtime check requiring pandas>=2.0.0 (not
+# just a pip-metadata mismatch — verified by direct import, it raises
+# even with the exact version from Eric's own real environment's
+# pip-freeze), and cyvcf2's prebuilt wheel fails to load on this Mac
+# (`symbol not found in flat namespace '_bcf_float_missing'`, an htslib
+# ABI mismatch). Since neither package is needed for anything a
+# participant actually runs, removing them is the real fix, not another
+# round of version whack-a-mole. If cell-type work ever needs
+# individual-level PrediXcan.py (see discussion.md 2026-09-22), this
+# will need solving for real at that point — separately, on its own.
+#
+# ADDED 2026-10-01: cell-type work DID happen (synthetic genotypes,
+# see sever_folder/script/generate_synthetic_celltype_genotypes.py) —
+# but via PrediXcan.py's --text_genotypes dosage format specifically
+# BECAUSE it avoids cyvcf2 (still broken, see above) and bgen-reader
+# entirely. That path's other real imports (traced via Predict.py /
+# PrediXcanAssociation.py) are pyliftover and statsmodels — added
+# below. CONFIRMED working end-to-end: ran script/run_native_singlecell.py
+# for real against the actual CD14-positive_monocyte weight model +
+# synthetic genotype data, got real association output (45 genes).
+#
+# Also found and fixed along the way (2026-10-01): this project lives
+# under iCloud Drive, and the heavy pip install/uninstall churn across
+# earlier debugging let iCloud silently create dozens of
+# conflict-duplicate files INSIDE a venv (e.g. a second
+# "pandas-1.5.3 2.dist-info" next to the real one, plus whole duplicated
+# "bin 2"/"lib 2" directories) — which corrupted pandas's own version
+# metadata badly enough to block all further pip installs ("Invalid
+# version: '1.5.3 2'"). Not a code bug — a real hazard of venvs living
+# in any cloud-synced folder (Dropbox/OneDrive/Google Drive/iCloud).
+# Fixed by deleting and rebuilding the venv from scratch; see
+# docs/native_setup_guide.md's Troubleshooting section for the
+# participant-facing note.
 numpy<2.0
 pandas<2.0
 scipy
 patsy
 h5py
 sqlalchemy<2.0
+pyliftover
+statsmodels

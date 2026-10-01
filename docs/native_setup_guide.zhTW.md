@@ -94,18 +94,26 @@ script\windows\setup.bat
 
 **Mac / Linux**:
 ```bash
-bash script/run_native.sh
+bash script/run_native_tissue.sh
 ```
 **Windows**(或任何你不想用 bash 的地方):
 ```powershell
-venv\Scripts\python.exe script\run_native.py
+venv\Scripts\python.exe script\run_native_tissue.py
 ```
 ```bash
-venv/bin/python script/run_native.py    # Mac/Linux 也可以這樣用
+venv/bin/python script/run_native_tissue.py    # Mac/Linux 也可以這樣用
 ```
 
 這會針對兩個組織實際跑一次 TWAS 分析(S-PrediXcan),把結果寫進新的
 `out/` 資料夾。
+
+**選用——cell-type 這條線**(2026-10-01 新增):用同樣方式執行
+`script/run_native_singlecell.sh`(Windows 上是 `.py`)。這條用的是
+不同的方法(個人層級的 `PrediXcan.py`),針對的是**合成**基因型資料
+(不是真實個人——從真實的等位基因頻率模擬出來的,詳見
+`script/run_native_singlecell.py` 裡的說明),所以結果本來就會接近
+統計雜訊——這條線是用來示範個人層級的流程能跑起來,不是真的生物學
+發現。當成附加內容看待就好。
 
 ---
 
@@ -114,11 +122,12 @@ venv/bin/python script/run_native.py    # Mac/Linux 也可以這樣用
 給已經很習慣用終端機的人:
 ```bash
 # 1. 下載並解壓縮這個 repo,cd 進去之後:
-bash script/mac/setup.sh        # 檢查 Python、venv、安裝、下載資料、檢查
-bash script/run_native.sh       # 或:venv/bin/python script/run_native.py
+bash script/mac/setup.sh             # 檢查 Python、venv、安裝、下載資料、檢查
+bash script/run_native_tissue.sh     # 或:venv/bin/python script/run_native_tissue.py
+bash script/run_native_singlecell.sh # 選用的 cell-type 線(合成資料)
 ```
 Windows:`script\windows\setup.bat`,然後
-`venv\Scripts\python.exe script\run_native.py`。
+`venv\Scripts\python.exe script\run_native_tissue.py`。
 
 套件清單(見 `requirements.txt`):
 `numpy<2.0`、`pandas<2.0`、`scipy`、`patsy`、`h5py`、
@@ -178,6 +187,14 @@ Step 3 的腳本不管打字執行還是雙擊,做的事完全一樣:
 - **雙擊 `setup.command` 或 `setup.bat` 時出現權限/安全性警告**:對
   下載下來的腳本來說是正常的,見上面的說明——或者乾脆改用 Step 3
   打字執行的版本,就不會跳出這些警告。
+- **本來好好的,pip 突然開始出現看不懂的「Invalid version」錯誤**
+  (2026-10-01 發現):如果這個 workshop 資料夾放在雲端同步的資料夾裡
+  (iCloud Drive、Dropbox、OneDrive、Google Drive),同步服務可能會在
+  pip 快速寫入大量檔案時,悄悄在 `venv/` 裡建立衝突複本——這可能會
+  把某個套件自己的版本資訊弄壞到讓後續所有安裝都失敗的程度。這不是
+  `setup.py` 自己能防範的事。解法:把整個 `venv` 資料夾刪掉,重跑一次
+  Step 3 讓它重新建立。如果一直發生,把這個資料夾搬到雲端同步範圍
+  以外,就能完全避開這個問題。
 - **其他看起來怪怪的地方**:重新執行一次 Step 3
   (`bash script/mac/setup.sh` / `script\windows\setup.bat`)——重複執行
   很安全,它會清楚重新回報到底缺什麼。

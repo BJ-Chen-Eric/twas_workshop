@@ -3,7 +3,7 @@ set -e
 # Runs the actual S-PrediXcan workshop analysis against the venv created
 # by script/setup.py (see docs/native_setup_guide.md). Portable: locates
 # the workshop root relative to this script's own location. Windows or
-# bash-averse users: script/run_native.py does the same thing in pure
+# bash-averse users: script/run_native_tissue.py does the same thing in pure
 # Python.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

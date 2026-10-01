@@ -43,12 +43,16 @@ DATA_FILES = [
     ("en_Spleen.txt.gz", "tissue_twas_weight/en_Spleen.txt.gz", 30844880),
     ("en_Whole_Blood.db", "tissue_twas_weight/en_Whole_Blood.db", 33234944),
     ("en_Whole_Blood.txt.gz", "tissue_twas_weight/en_Whole_Blood.txt.gz", 41012126),
-    # Cell-type weight models — used by Eric's script/run_native_sc.sh.
-    # Folder/filenames match what that script expects (celltype_twas_weight/,
-    # no "en_" prefix, per Eric's 2026-09-22 edit). STILL BLOCKED though:
-    # there is no .txt.gz covariance file for either on Zenodo, and
-    # S-PrediXcan requires one (MatrixManager.load_matrix_manager crashes
-    # on a None path) — see discussion.md 2026-09-22.
+    # Cell-type weight models. Eric's original script/run_native_sc.sh
+    # (SPrediXcan.py-based, needing --covariance) is superseded — no
+    # covariance file exists for either on Zenodo, and S-PrediXcan
+    # requires one (see discussion.md 2026-09-22). The working path as
+    # of 2026-10-01 is script/run_native_singlecell.{sh,py}, which uses
+    # individual-level PrediXcan.py against SYNTHETIC genotype data in
+    # celltype_genotype_synthetic/ (see
+    # sever_folder/script/generate_synthetic_celltype_genotypes.py) —
+    # confirmed working end-to-end for CD14-positive_monocyte; plasmablast
+    # has no synthetic data generated yet (gracefully skipped).
     ("CD14-positive_monocyte.db", "celltype_twas_weight/CD14-positive_monocyte.db", 4005888),
     ("plasmablast.db", "celltype_twas_weight/plasmablast.db", 4075520),
 ]
@@ -62,7 +66,7 @@ GWAS_FILE_SIZE = 32650046
 
 # tissue.txt / celltype.txt are tiny and fixed (match the actual toy-data
 # scope, see docs/data_requirements.md) — generated directly rather than
-# fetched. celltype.txt feeds Eric's script/run_native_sc.sh.
+# fetched. celltype.txt feeds script/run_native_singlecell.{sh,py}.
 TISSUE_FILE_CONTENT = "Spleen\nWhole_Blood\n"
 CELLTYPE_FILE_CONTENT = "CD14-positive_monocyte\nplasmablast\n"
 
@@ -256,7 +260,9 @@ if __name__ == "__main__":
     run_check()
     print("\nSetup finished. Next: run the workshop script —")
     if IS_WINDOWS:
-        print(r"    venv\Scripts\python.exe script\run_native.py")
+        print(r"    venv\Scripts\python.exe script\run_native_tissue.py")
+        print(r"    venv\Scripts\python.exe script\run_native_singlecell.py  (optional, cell-type track)")
     else:
-        print("    bash script/run_native.sh")
+        print("    bash script/run_native_tissue.sh")
+        print("    bash script/run_native_singlecell.sh  (optional, cell-type track)")
     print("(see docs/native_setup_guide.md if anything above said MISSING)")

@@ -79,3 +79,17 @@ you're curious what comes next.
 This workshop starts from an already-computed summary-statistics file.
 See [`gwas_to_summary_stats.md`](./gwas_to_summary_stats.md) if you want
 to understand how raw genotyped samples turn into that file.
+
+## What about the optional cell-type track?
+
+`run_native_singlecell.py`/`.sh` runs a related but different method —
+**individual-level** PrediXcan (not S-PrediXcan), which predicts
+expression directly from genotypes and regresses against a phenotype,
+rather than working from summary statistics. The genotype data behind
+it is entirely **synthetic**: simulated per-SNP from real allele
+frequencies, with no real person's genome and no real genetic linkage
+preserved between SNPs. That last part matters — real linkage between
+nearby SNPs is exactly what a multi-SNP prediction model relies on, so
+without it, predicted expression here is close to statistical noise by
+design. This track exists to show the individual-level pipeline running
+end-to-end, not to demonstrate a real biological signal.

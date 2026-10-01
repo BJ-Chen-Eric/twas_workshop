@@ -102,18 +102,26 @@ whatever's already done.
 
 **Mac / Linux**:
 ```bash
-bash script/run_native.sh
+bash script/run_native_tissue.sh
 ```
 **Windows** (or anywhere you'd rather not use bash):
 ```powershell
-venv\Scripts\python.exe script\run_native.py
+venv\Scripts\python.exe script\run_native_tissue.py
 ```
 ```bash
-venv/bin/python script/run_native.py    # Mac/Linux equivalent, if preferred
+venv/bin/python script/run_native_tissue.py    # Mac/Linux equivalent, if preferred
 ```
 
 This runs the actual TWAS analysis (S-PrediXcan) for both tissues,
 writing results into a new `out/` folder.
+
+**Optional — the cell-type track** (added 2026-10-01): run
+`script/run_native_singlecell.sh` (or `.py` on Windows) the same way.
+This uses a different method (individual-level `PrediXcan.py`) against
+**synthetic** genotype data (not real individuals — simulated from real
+allele frequencies, see `script/run_native_singlecell.py`'s comments),
+so its results are close to statistical noise by design — it
+demonstrates the pipeline, not a real finding. Treat it as a bonus.
 
 ---
 
@@ -122,11 +130,12 @@ writing results into a new `out/` folder.
 For anyone already comfortable with a terminal:
 ```bash
 # 1. Download + unzip this repo, cd into it, then:
-bash script/mac/setup.sh        # checks Python, venv, install, data, check
-bash script/run_native.sh       # or: venv/bin/python script/run_native.py
+bash script/mac/setup.sh             # checks Python, venv, install, data, check
+bash script/run_native_tissue.sh     # or: venv/bin/python script/run_native_tissue.py
+bash script/run_native_singlecell.sh # optional cell-type track (synthetic data)
 ```
 Windows: `script\windows\setup.bat` then
-`venv\Scripts\python.exe script\run_native.py`.
+`venv\Scripts\python.exe script\run_native_tissue.py`.
 
 Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
 `patsy`, `h5py`, `sqlalchemy<2.0`. The toolkit
@@ -195,6 +204,17 @@ that isn't from a registered publisher — not a sign anything's wrong.)
   or `setup.bat`**: expected for downloaded scripts, see the note above —
   or just use the typed-command version in Step 3 instead, which doesn't
   trigger these.
+- **pip starts failing with a confusing "Invalid version" error after
+  everything was working fine** (found 2026-10-01): if this workshop
+  folder lives inside a cloud-synced folder (iCloud Drive, Dropbox,
+  OneDrive, Google Drive), the sync service can silently create
+  conflict-duplicate files inside `venv/` while pip is writing lots of
+  files quickly — which can corrupt a package's own version metadata
+  badly enough to block any further installs. Not something `setup.py`
+  can prevent on its own. Fix: delete the `venv` folder entirely and
+  re-run Step 3 to rebuild it from scratch. If it keeps happening, moving
+  this folder outside the cloud-synced location avoids the problem
+  entirely.
 - **Something else looks wrong**: re-run Step 3 (`bash script/mac/setup.sh` /
   `script\windows\setup.bat`) — it's safe to run repeatedly, and re-reports
   exactly what's missing.

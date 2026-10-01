@@ -71,3 +71,14 @@ SNP,所以不像原始 GWAS 結果那樣每個 SNP 都有唯一座標。如果�
 這個 workshop 是從一份已經算好的 summary statistics 檔案開始的。如果
 想了解原始的基因型樣本是怎麼變成那份檔案的,見
 [`gwas_to_summary_stats.zhTW.md`](./gwas_to_summary_stats.zhTW.md)。
+
+## 那個選用的 cell-type 線是怎麼回事?
+
+`run_native_singlecell.py`/`.sh` 跑的是一個相關但不同的方法——
+**個人層級**的 PrediXcan(不是 S-PrediXcan),直接從基因型預測
+表現量、再對表現型做迴歸,而不是從 summary statistics 出發。背後的
+基因型資料完全是**合成**的:針對每個 SNP,用真實的等位基因頻率
+模擬出來,沒有任何真實個人的基因組,SNP 之間也不保留真實的遺傳連鎖。
+最後這點很重要——鄰近 SNP 之間真實的連鎖,正是多 SNP 預測模型賴以
+運作的東西,沒有它,這裡的預測表現量本來就會接近統計雜訊。這條線是
+用來示範個人層級的流程能跑完,不是要示範真的生物學訊號。
