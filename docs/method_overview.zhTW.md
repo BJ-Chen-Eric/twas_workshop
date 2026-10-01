@@ -63,4 +63,11 @@ SNP,所以不像原始 GWAS 結果那樣每個 SNP 都有唯一座標。如果�
 可能指到「錯的」基因,只是剛好跟真正的因果基因離得很近。有專門的後續
 方法可以處理這個問題(檢查 GWAS 跟 eQTL 的訊號是不是真的共享同一個
 因果變異位點)——不在這場 workshop 的範圍內,但值得知道:這只是個
-起點,不是最終答案。
+起點,不是最終答案。想知道這些方法(MR、COLOC、SuSiE)的白話介紹,
+見 [`causal_followup_methods.zhTW.md`](./causal_followup_methods.zhTW.md)。
+
+## 一開始那份 GWAS 檔案是哪來的?
+
+這個 workshop 是從一份已經算好的 summary statistics 檔案開始的。如果
+想了解原始的基因型樣本是怎麼變成那份檔案的,見
+[`gwas_to_summary_stats.zhTW.md`](./gwas_to_summary_stats.zhTW.md)。

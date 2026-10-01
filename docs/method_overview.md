@@ -70,4 +70,12 @@ underlying SNPs (linkage disequilibrium), so a TWAS hit can point at the
 methods exist specifically to address this (checking whether the GWAS and
 eQTL signals really do share the same causal variant) — out of scope for
 this session, but worth knowing this is a starting point, not a final
-answer.
+answer. See [`causal_followup_methods.md`](./causal_followup_methods.md)
+for a plain-language introduction to those methods (MR, COLOC, SuSiE), if
+you're curious what comes next.
+
+## Where did the input GWAS file come from?
+
+This workshop starts from an already-computed summary-statistics file.
+See [`gwas_to_summary_stats.md`](./gwas_to_summary_stats.md) if you want
+to understand how raw genotyped samples turn into that file.

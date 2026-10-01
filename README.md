@@ -52,8 +52,17 @@ bash script/run_native.sh       # runs the actual analysis
 script\windows\setup.bat
 venv\Scripts\python.exe script\run_native.py
 ```
-(Prefer double-clicking to typing? `script/mac/setup.command` and
-`script\windows\setup.bat` both work that way too — see the guide.)
+**Prefer double-clicking to typing?** `script/mac/setup.command` /
+`script\windows\setup.bat` do the exact same thing as the typed
+commands above — just double-click instead:
+- **Mac**: double-click `script/mac/setup.command`. If macOS shows a
+  warning the first time, right-click the file → **Open** → confirm.
+- **Windows**: double-click `script\windows\setup.bat` directly (it's
+  already the double-clickable form). If Windows shows "Windows
+  protected your PC," click **More info** → **Run anyway**.
+
+(These warnings are normal for any script downloaded from the internet
+that isn't from a registered publisher — not a sign anything's wrong.)
 
 ## What You'll Do
 
@@ -75,6 +84,11 @@ expected across different computers), it worked.
 - `docs/native_setup_guide.md` — full setup walkthrough (start here)
 - `docs/method_overview.md` — what this analysis does and how to read
   the results, in plain language
+- `docs/gwas_to_summary_stats.md` — additional info: where the input
+  GWAS file itself comes from (raw genotypes → QC → imputation →
+  summary statistics)
+- `docs/causal_followup_methods.md` — additional info: what comes after
+  a TWAS hit (MR, COLOC, SuSiE)
 - `script/mac/setup.sh` (+ `setup.command`) — one-step setup on Mac
 - `script/windows/setup.bat` — one-step setup on Windows
 - `script/run_native.py` / `run_native.sh` — runs the analysis
