@@ -4,19 +4,9 @@
 start at the top and follow every step in order.** If you already know
 what a terminal/venv/pip is, skip to [Quick version](#quick-version).
 
-**Status (2026-09-30): validated on Mac (Python 3.9, Python 3.12 ARM) and
-Linux (Python 3.10)** — all three reproduced the reference output (the
-Python 3.12 run matches to within floating-point rounding noise from a
-different BLAS backend — same genes, same order, same signs, only
-last-digit differences). Windows hasn't been tested yet (flagged below
-where it matters). All toy data, including the chr10 GWAS file, now
-lives on Zenodo
-([weights: record 22822753](https://zenodo.org/records/22822753),
-[GWAS: record 22866999](https://zenodo.org/records/22866999)) —
-`script/setup.py` downloads both automatically.
-
-Docker was tried and dropped entirely (2026-09-18) — this native setup
-needs only Python itself, nothing else to install.
+This setup needs only Python itself — nothing else to install. All toy
+data (weight models and the GWAS summary-statistics file) downloads
+automatically from Zenodo the first time you run setup.
 
 ---
 
@@ -68,32 +58,23 @@ script\windows\setup.bat
 This single script (no typing anything else needed) — **including
 checking whether Python is even installed**, so this is genuinely the
 only command you need to run:
-1. Checks for Python. If it's missing, it'll offer to install
-   **Python 3.11 specifically** (not just "whatever's latest"), asking
-   yes/no first since this needs your password/confirmation: on Mac,
-   via Homebrew `python@3.11` (installing Homebrew first too, if
-   needed); on Windows, via `winget install ... Python.Python.3.11`. If
-   you say no, it prints a manual install link instead and stops —
-   re-run the same command once Python's in. *(This auto-install offer
-   hasn't been tested hands-on on a genuinely Python-less machine yet —
-   see `discussion.md` 2026-09-22/2026-09-30; if it misbehaves, use the
-   manual link it also prints.)*
-   **Why 3.11 specifically**: `pandas<2.0` (pinned below) has no
-   ready-made install package for Python 3.12+ on any platform, so
-   setup has to compile it — confirmed working on Mac (2026-09-30), but
-   compiling on Windows additionally needs a C/C++ compiler most
-   computers don't have. Already on 3.12+? It'll likely still work on
-   Mac/Linux; on Windows it's untested — see Troubleshooting below.
+1. Checks for Python. If it's missing, it offers to install **Python
+   3.11 specifically** (not just "whatever's latest"), asking for your
+   confirmation first since this needs your password: on Mac, via
+   Homebrew (installing Homebrew first too, if needed); on Windows, via
+   `winget`. If you say no, it prints a manual install link instead and
+   stops — re-run the same command once Python's in.
 2. Creates an isolated Python environment (`venv/`) — keeps everything
    below from touching/conflicting with anything else on your computer.
 3. Installs the required packages into it.
-4. Downloads the toy data (weight models) from Zenodo.
+4. Downloads the toy data (weight models and GWAS file) from Zenodo.
 5. Checks everything is actually ready, and tells you clearly if
    something's missing.
 
 It'll print progress as it goes. The first run takes a few minutes
 (downloading packages + data); safe to re-run any time — it skips
-whatever's already done.
+whatever's already done, and automatically cleans up and starts fresh
+if an earlier attempt failed partway through.
 
 **If it prints any `MISSING` lines at the end**, see
 [Troubleshooting](#troubleshooting) below.
@@ -115,13 +96,14 @@ venv/bin/python script/run_native_tissue.py    # Mac/Linux equivalent, if prefer
 This runs the actual TWAS analysis (S-PrediXcan) for both tissues,
 writing results into a new `out/` folder.
 
-**Optional — the cell-type track** (added 2026-10-01): run
-`script/run_native_singlecell.sh` (or `.py` on Windows) the same way.
-This uses a different method (individual-level `PrediXcan.py`) against
-**synthetic** genotype data (not real individuals — simulated from real
-allele frequencies, see `script/run_native_singlecell.py`'s comments),
-so its results are close to statistical noise by design — it
-demonstrates the pipeline, not a real finding. Treat it as a bonus.
+**Optional — the cell-type track**: run `script/run_native_singlecell.sh`
+(or `.py` on Windows) the same way. This uses a different method
+(individual-level `PrediXcan.py`) against **synthetic** genotype data —
+not real individuals, simulated from real allele frequencies (see
+`script/run_native_singlecell.py`'s comments for why). Its results are
+close to statistical noise by design: this track demonstrates the
+individual-level pipeline running, not a real biological finding. Treat
+it as a bonus.
 
 ---
 
@@ -138,12 +120,10 @@ Windows: `script\windows\setup.bat` then
 `venv\Scripts\python.exe script\run_native_tissue.py`.
 
 Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
-`patsy`, `h5py`, `sqlalchemy<2.0`. The toolkit
-(`tools/MetaXcan-master/software/`) ships in the repo; the toy weight
-models (~130MB, [record 22822753](https://zenodo.org/records/22822753))
-and the GWAS file (~31MB,
-[record 22866999](https://zenodo.org/records/22866999)) both download
-automatically.
+`patsy`, `h5py`, `sqlalchemy<2.0`, `pyliftover`, `statsmodels`. The
+toolkit (`tools/MetaXcan-master/software/`) ships in the repo; the toy
+weight models (~130MB) and the GWAS file (~31MB) both download
+automatically from Zenodo.
 
 ## Optional: double-click instead of typing
 
@@ -162,59 +142,25 @@ that isn't from a registered publisher — not a sign anything's wrong.)
 
 - **Step 3 says Python wasn't found**: it'll print a link and instructions
   right there — install Python, open a new terminal, and run Step 3 again.
-- **Building `pandas` fails on Python 3.12** (`pkg_resources` or
-  `Cython` missing): **resolved on Mac 2026-09-30**, confirmed via a
-  real, complete run all the way through the actual analysis —
-  `script/setup.py` pins `setuptools<81`, `numpy`, and `Cython<3` into
-  the venv, then builds pandas with `--no-build-isolation`. If you still
-  hit this on Mac/Linux, something changed since — flag it rather than
-  trying to self-resolve mid-workshop.
-- **On Windows, Python 3.12+ fails with "Microsoft Visual C++ 14.0 or
-  greater is required"**: **confirmed on a real Windows run,
-  2026-09-30** — building pandas from source needs a C/C++ compiler
-  (Microsoft C++ Build Tools), which most computers don't have.
-  `setup.bat` now handles this in three tiers: (1) use a side-installed
-  Python 3.11 for the venv automatically if one's already there (via
-  the `py` launcher); (2) if not, **actively offer to install 3.11 via
-  winget right there** (y/n) — an earlier version of this script only
-  did this when no Python at all was found, silently skipping the offer
-  whenever 3.12+ was already on PATH, which is the actual case on a
-  real machine and was found and fixed 2026-09-30; (3) if winget isn't
-  available, or you decline the offer, it **stops with manual
-  python.org install instructions instead of silently continuing with
-  3.12+** — that build is already confirmed to fail, so there's no
-  point letting it run just to hit the same error. This three-tier
-  logic is **untested hands-on** (no Windows machine available to
-  verify the batch script runs as written). If it still doesn't catch
-  it: install **Python 3.11** manually
-  (`winget install -e --id Python.Python.3.11`, pandas has a ready-made
-  package for it, nothing to compile) and re-run setup with
+- **On Windows, setup fails with "Microsoft Visual C++ 14.0 or greater
+  is required"**: this means it ended up building on Python 3.12+
+  instead of 3.11 (pandas needs a C/C++ compiler to build on 3.12+,
+  which most computers don't have). Install Python 3.11 manually
+  (`winget install -e --id Python.Python.3.11`) and re-run setup with
   `py -3.11 script\setup.py` specifically — don't spend workshop time
-  installing a C++ compiler. *(You don't need to delete the `venv`
-  folder yourself first — as of 2026-09-30, setup now
-  removes it automatically whenever installation fails partway through,
-  so re-running always starts clean.)*
-- *(2026-09-30: `bgen-reader`/`cyvcf2` were removed from
-  `requirements.txt` entirely — they were never actually used by
-  anything this workshop runs (only needed for a different,
-  individual-level genotype pipeline), and both had real, unfixable
-  installation problems on Python 3.12/this platform. If you see old
-  guidance mentioning them, it's stale.)*
+  installing a C++ compiler.
 - **Permission/security warnings when double-clicking `setup.command`
   or `setup.bat`**: expected for downloaded scripts, see the note above —
   or just use the typed-command version in Step 3 instead, which doesn't
   trigger these.
-- **pip starts failing with a confusing "Invalid version" error after
-  everything was working fine** (found 2026-10-01): if this workshop
-  folder lives inside a cloud-synced folder (iCloud Drive, Dropbox,
-  OneDrive, Google Drive), the sync service can silently create
-  conflict-duplicate files inside `venv/` while pip is writing lots of
-  files quickly — which can corrupt a package's own version metadata
-  badly enough to block any further installs. Not something `setup.py`
-  can prevent on its own. Fix: delete the `venv` folder entirely and
-  re-run Step 3 to rebuild it from scratch. If it keeps happening, moving
-  this folder outside the cloud-synced location avoids the problem
-  entirely.
+- **pip starts failing with a confusing "Invalid version" error**: this
+  can happen if the workshop folder lives inside a cloud-synced folder
+  (iCloud Drive, Dropbox, OneDrive, Google Drive) — the sync service can
+  create conflict-duplicate files inside `venv/` while pip is writing to
+  it, corrupting a package's version info badly enough to block further
+  installs. Fix: delete the `venv` folder entirely and re-run Step 3 to
+  rebuild it from scratch. If it keeps happening, move this folder
+  outside the cloud-synced location.
 - **Something else looks wrong**: re-run Step 3 (`bash script/mac/setup.sh` /
   `script\windows\setup.bat`) — it's safe to run repeatedly, and re-reports
   exactly what's missing.
@@ -223,8 +169,7 @@ that isn't from a registered publisher — not a sign anything's wrong.)
 
 Docker was the original plan and did work — but installing Docker Desktop
 itself turned out to be slow and complicated in practice, and once it was
-clear the actual analysis only needs 8 plain `pip`-installable Python
-packages (no conda, nothing exotic), a virtual environment turned out to
-do the identical job with far less to install and far less that can go
-wrong. Docker was dropped entirely (2026-09-18) rather than kept as a
-fallback, since it wasn't pulling its weight.
+clear the actual analysis only needs a handful of plain `pip`-installable
+Python packages (no conda, nothing exotic), a virtual environment turned
+out to do the identical job with far less to install and far less that
+can go wrong.
