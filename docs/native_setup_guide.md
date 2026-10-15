@@ -153,6 +153,14 @@ that isn't from a registered publisher — not a sign anything's wrong.)
   or `setup.bat`**: expected for downloaded scripts, see the note above —
   or just use the typed-command version in Step 3 instead, which doesn't
   trigger these.
+- **Downloading the toy data fails with "Too Many Requests" or a
+  gateway timeout**: Zenodo (where the toy data is hosted) is a shared
+  public service and occasionally rate-limits or times out, especially
+  if many people on the same network run setup at once (e.g. everyone
+  in the workshop room at the same time). Setup already waits and
+  retries automatically — if it still fails after that, just wait a
+  minute and re-run Step 3; it skips any files already downloaded and
+  only retries what's missing.
 - **pip starts failing with a confusing "Invalid version" error**: this
   can happen if the workshop folder lives inside a cloud-synced folder
   (iCloud Drive, Dropbox, OneDrive, Google Drive) — the sync service can

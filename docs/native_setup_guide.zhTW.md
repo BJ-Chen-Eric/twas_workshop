@@ -141,6 +141,12 @@ Step 3 的腳本不管打字執行還是雙擊,做的事完全一樣:
 - **雙擊 `setup.command` 或 `setup.bat` 時出現權限/安全性警告**:對
   下載下來的腳本來說是正常的,見上面的說明——或者乾脆改用 Step 3
   打字執行的版本,就不會跳出這些警告。
+- **下載 toy data 時出現「Too Many Requests」或 gateway timeout**:
+  Zenodo(toy data 放的地方)是公開的共用服務,偶爾會做速率限制或
+  逾時,尤其是同一個網路裡很多人同時執行 setup 的時候(例如 workshop
+  現場大家一起跑)。setup 本身已經會自動等待並重試——如果重試後還是
+  失敗,等一分鐘再重跑一次 Step 3 就好;它會跳過已經下載好的檔案,
+  只重試缺的部分。
 - **本來好好的,pip 突然開始出現看不懂的「Invalid version」錯誤**:
   如果這個 workshop 資料夾放在雲端同步的資料夾裡(iCloud Drive、
   Dropbox、OneDrive、Google Drive),同步服務可能會在 pip 寫入 `venv/`

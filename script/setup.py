@@ -19,6 +19,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 import urllib.request
 
 WORKSHOP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,11 +91,10 @@ def check_python_version():
     elif sys.version_info >= (3, 12):
         print("    NOTE: pandas 1.5.3 (pinned below) has no prebuilt "
               "install package for Python 3.12+, so the next step builds "
-              "it from source. Confirmed working on Mac as of "
-              "2026-09-30, but building from source on Windows also "
-              "needs a C/C++ compiler (Microsoft C++ Build Tools) that "
-              "most computers don't have installed — untested on "
-              "Windows. If this step fails and you have a choice,")
+              "it from source. This works on Mac and Linux. On Windows, "
+              "building from source also needs a C/C++ compiler "
+              "(Microsoft C++ Build Tools), which most computers don't "
+              "have installed. If this step fails and you have a choice,")
         if IS_WINDOWS:
             print("    installing Python 3.11 instead avoids the whole "
                   "issue (pandas has a ready-made package for it, no "
@@ -175,10 +175,16 @@ def install_requirements():
     run([VENV_PYTHON, "-m", "pip", "install", "-q", "-r", req_file])
 
 
-def _download(url, dest, retries=3):
+def _download(url, dest, retries=5):
     """urlretrieve with retry + cleanup — a dropped connection otherwise
     leaves a truncated file behind that a bare os.path.exists() check
-    would mistake for a completed download on the next run."""
+    would mistake for a completed download on the next run.
+
+    Zenodo is a shared public service and can return 429 (rate limited)
+    or 5xx (temporarily overloaded) under load — retrying instantly just
+    hits the same limit again, so this waits between attempts (honoring
+    the server's Retry-After header if it sends one, otherwise a
+    growing backoff) instead of hammering it."""
     for attempt in range(1, retries + 1):
         try:
             urllib.request.urlretrieve(url, dest)
@@ -188,8 +194,18 @@ def _download(url, dest, retries=3):
                 os.remove(dest)
             if attempt == retries:
                 raise
-            print(f"    Download failed ({e}), retrying "
+            wait = None
+            retry_after = getattr(e, "headers", None) and e.headers.get("Retry-After")
+            if retry_after:
+                try:
+                    wait = int(retry_after)
+                except ValueError:
+                    wait = None
+            if wait is None:
+                wait = min(60, 5 * (2 ** (attempt - 1)))  # 5, 10, 20, 40, 60s
+            print(f"    Download failed ({e}), retrying in {wait}s "
                   f"({attempt}/{retries})...")
+            time.sleep(wait)
 
 
 def _needs_download(dest, expected_size):
