@@ -68,7 +68,7 @@ if __name__ == "__main__":
     missing_mods = check_modules()
     missing_toolkit = check_paths("Toolkit", [TOOLKIT_PATH])
     missing_data = check_paths(
-        "Toy data (run script/setup.py first if these are missing)",
+        "Toy data (run script/step1_setup.py first if these are missing)",
         EXPECTED_DATA,
     )
 

@@ -60,12 +60,3 @@ precise colocalization answer than plain COLOC when a locus is
 genetically complex. This step is also the most fragile in practice —
 fine-mapping methods are known to need careful handling on real,
 imperfect linkage-disequilibrium data, not just a single function call.
-
-## Want to see this actually implemented?
-
-These three methods, run together as a single per-gene pipeline on
-real TWAS-significant genes, are implemented in the project's own
-`command_MR_pp.R` (not included in this workshop folder — it's part of
-the internal development material, and needs real genotype/eQTL
-reference data this workshop doesn't ship with). Ask the workshop
-organizer if you'd like to see it.

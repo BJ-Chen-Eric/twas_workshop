@@ -10,7 +10,7 @@
 
 ---
 
-## Step 1 —— 下載這個 workshop 資料夾
+## 開始之前——下載資料夾、打開終端機
 
 1. 在瀏覽器裡打開這個 repo 的 GitHub 頁面。
 2. 點綠色的 **`<> Code`** 按鈕,再點 **`Download ZIP`**。
@@ -20,10 +20,8 @@
 
 *(如果你已經會用 git,`git clone` 也可以——上面是不用 git 的做法。)*
 
-## Step 2 —— 在 *workshop 資料夾裡*打開終端機
-
-你的終端機目前所在的位置,必須真的是 Step 1 那個資料夾,不能隨便一個
-地方。
+接下來在**那個資料夾裡**打開終端機——你的終端機目前所在的位置,必須
+真的是這個 workshop 資料夾,不能隨便一個地方。
 
 **Mac**:打開 **Finder**,找到 workshop 資料夾,然後:
 - 右鍵點資料夾 → **「在檔案夾中打開終端機」**(如果有這個選項),或者
@@ -41,19 +39,19 @@
 Enter——應該會看到 `requirements.txt` 跟一個 `script` 資料夾之類的檔案。
 如果沒有,代表你在錯的目錄。
 
-## Step 3 —— 執行那支唯一的 setup 腳本
+## Step 1 —— 設定環境(只需要做一次)
 
 **Mac**:
 ```bash
-bash script/mac/setup.sh
+bash script/mac/step1_setup.sh
 ```
 **Windows**:
 ```powershell
-script\windows\setup.bat
+script\windows\step1_setup.bat
 ```
 
 這一支腳本(不用再打別的指令)——**連檢查有沒有裝 Python 都包在裡面
-了**,所以這真的是唯一需要執行的指令:
+了**:
 1. 檢查有沒有 Python。如果沒有,會提供**特別指定 Python 3.11**
    (不是「隨便最新版」)的自動安裝選項,先問是/否(因為需要你的
    密碼/確認):Mac 上透過 Homebrew(需要的話先裝 Homebrew 本身);
@@ -72,30 +70,42 @@ script\windows\setup.bat
 **如果最後印出任何 `MISSING` 的訊息**,見下面的
 [疑難排解](#疑難排解)。
 
-## Step 4 —— 執行 workshop 分析
+## Step 2 —— 執行主要分析(組織層級)
+
+這裡也可以雙擊執行:
+- **Mac**:雙擊 `script/mac/step2_run_native_tissue.command`。
+- **Windows**:雙擊 `script\windows\step2_run_native_tissue.bat`。
+
+或者用打字的方式:
 
 **Mac / Linux**:
 ```bash
-bash script/run_native_tissue.sh
+bash script/step2_run_native_tissue.sh
 ```
 **Windows**(或任何你不想用 bash 的地方):
 ```powershell
-venv\Scripts\python.exe script\run_native_tissue.py
+venv\Scripts\python.exe script\step2_run_native_tissue.py
 ```
 ```bash
-venv/bin/python script/run_native_tissue.py    # Mac/Linux 也可以這樣用
+venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux 也可以這樣用
 ```
 
 這會針對兩個組織實際跑一次 TWAS 分析(S-PrediXcan),把結果寫進新的
 `out/` 資料夾。
 
-**選用——cell-type 這條線**:用同樣方式執行
-`script/run_native_singlecell.sh`(Windows 上是 `.py`)。這條用的是
-不同的方法(個人層級的 `PrediXcan.py`),針對的是**合成**基因型資料
-(不是真實個人——從真實的等位基因頻率模擬出來的,詳見
-`script/run_native_singlecell.py` 裡的說明),所以結果本來就會接近
-統計雜訊——這條線是用來示範個人層級的流程能跑起來,不是真的生物學
-發現。當成附加內容看待就好。
+## Step 3 —— 選用:cell-type 這條線
+
+雙擊 `script/mac/step3_run_native_singlecell.command` /
+`script\windows\step3_run_native_singlecell.bat`,或打字執行
+`script/step3_run_native_singlecell.sh`/`.py`,跟 Step 2 一樣。這條用
+的是不同的方法(個人層級的 `PrediXcan.py`),針對的是**合成**基因型
+資料(不是真實個人——從真實的等位基因頻率模擬出來的,詳見
+`script/step3_run_native_singlecell.py` 裡的說明),所以結果本來就會
+接近統計雜訊——這條線是用來示範個人層級的流程能跑起來,不是真的生物
+學發現。當成附加內容看待就好。
+
+如果你在跑完 Step 1 之前就先執行 Step 2 或 Step 3,會直接看到「請先
+執行 setup」的清楚訊息,不會是看不懂的錯誤。
 
 ---
 
@@ -104,12 +114,12 @@ venv/bin/python script/run_native_tissue.py    # Mac/Linux 也可以這樣用
 給已經很習慣用終端機的人:
 ```bash
 # 1. 下載並解壓縮這個 repo,cd 進去之後:
-bash script/mac/setup.sh             # 檢查 Python、venv、安裝、下載資料、檢查
-bash script/run_native_tissue.sh     # 或:venv/bin/python script/run_native_tissue.py
-bash script/run_native_singlecell.sh # 選用的 cell-type 線(合成資料)
+bash script/mac/step1_setup.sh             # Step 1:檢查 Python、venv、安裝、下載資料、檢查
+bash script/step2_run_native_tissue.sh     # Step 2:或 venv/bin/python script/step2_run_native_tissue.py
+bash script/step3_run_native_singlecell.sh # Step 3(選用):cell-type 線,合成資料
 ```
-Windows:`script\windows\setup.bat`,然後
-`venv\Scripts\python.exe script\run_native_tissue.py`。
+Windows:`script\windows\step1_setup.bat`,然後
+`venv\Scripts\python.exe script\step2_run_native_tissue.py`。
 
 套件清單(見 `requirements.txt`):`numpy<2.0`、`pandas<2.0`、`scipy`、
 `patsy`、`h5py`、`sqlalchemy<2.0`、`pyliftover`、`statsmodels`。工具本身
@@ -118,48 +128,45 @@ Windows:`script\windows\setup.bat`,然後
 
 ## 選用:用雙擊取代打字
 
-Step 3 的腳本不管打字執行還是雙擊,做的事完全一樣:
-- **Mac**:雙擊 `script/mac/setup.command`。如果 macOS 第一次跳出警告,
+Step 1-3 的腳本不管打字執行還是雙擊,做的事完全一樣:
+- **Mac**:`script/mac/step1_setup.command`、
+  `step2_run_native_tissue.command`、
+  `step3_run_native_singlecell.command`。如果 macOS 第一次跳出警告,
   右鍵點檔案 → **打開** → 確認。
-- **Windows**:直接雙擊 `script\windows\setup.bat`(它本來就是雙擊用的形式)。
-  如果 Windows 顯示「Windows 已保護你的電腦」,點**其他資訊** →
-  **仍要執行**。
+- **Windows**:`script\windows\step1_setup.bat`、
+  `step2_run_native_tissue.bat`、
+  `step3_run_native_singlecell.bat`——任何一個都可以直接雙擊(它們
+  本來就是雙擊用的形式)。如果 Windows 顯示「Windows 已保護你的
+  電腦」,點**其他資訊** → **仍要執行**。
 
 (這些警告對任何從網路上下載、不是來自已註冊發行者的腳本來說都很正常
 ——不代表哪裡出錯了。)
 
 ## 疑難排解
 
-- **Step 3 說找不到 Python**:它會直接印出連結跟該怎麼做——裝好
-  Python,打開一個新的終端機,再重跑一次 Step 3。
-- **Windows 上出現「Microsoft Visual C++ 14.0 or greater is
+- **Step 1 說找不到 Python**:它會直接印出連結跟該怎麼做——裝好
+  Python,打開一個新的終端機,再重跑一次 Step 1。
+- **Windows 上 Step 1 出現「Microsoft Visual C++ 14.0 or greater is
   required」的錯誤**:代表最後是用 3.12+ 編譯而不是 3.11(pandas 在
   3.12+ 上需要 C/C++ 編譯器才能編譯,大部分電腦都沒裝)。手動安裝
   Python 3.11(`winget install -e --id Python.Python.3.11`),然後明確
-  指定用 `py -3.11 script\setup.py` 重新執行 setup——不要在現場花時間
-  裝 C++ 編譯器。
-- **雙擊 `setup.command` 或 `setup.bat` 時出現權限/安全性警告**:對
-  下載下來的腳本來說是正常的,見上面的說明——或者乾脆改用 Step 3
-  打字執行的版本,就不會跳出這些警告。
+  指定用 `py -3.11 script\step1_setup.py` 重新執行 setup——不要在
+  現場花時間裝 C++ 編譯器。
+- **雙擊任何 `.command` 或 `.bat` 檔案時出現權限/安全性警告**:對
+  下載下來的腳本來說是正常的,見上面的說明——或者乾脆改用打字執行的
+  版本,就不會跳出這些警告。
 - **下載 toy data 時出現「Too Many Requests」或 gateway timeout**:
   Zenodo(toy data 放的地方)是公開的共用服務,偶爾會做速率限制或
   逾時,尤其是同一個網路裡很多人同時執行 setup 的時候(例如 workshop
   現場大家一起跑)。setup 本身已經會自動等待並重試——如果重試後還是
-  失敗,等一分鐘再重跑一次 Step 3 就好;它會跳過已經下載好的檔案,
+  失敗,等一分鐘再重跑一次 Step 1 就好;它會跳過已經下載好的檔案,
   只重試缺的部分。
 - **本來好好的,pip 突然開始出現看不懂的「Invalid version」錯誤**:
   如果這個 workshop 資料夾放在雲端同步的資料夾裡(iCloud Drive、
   Dropbox、OneDrive、Google Drive),同步服務可能會在 pip 寫入 `venv/`
   時建立衝突複本,把某個套件的版本資訊弄壞到讓後續所有安裝都失敗的
-  程度。解法:把整個 `venv` 資料夾刪掉,重跑一次 Step 3 讓它重新建立。
+  程度。解法:把整個 `venv` 資料夾刪掉,重跑一次 Step 1 讓它重新建立。
   如果一直發生,把這個資料夾搬到雲端同步範圍以外。
-- **其他看起來怪怪的地方**:重新執行一次 Step 3
-  (`bash script/mac/setup.sh` / `script\windows\setup.bat`)——重複執行
-  很安全,它會清楚重新回報到底缺什麼。
-
-## 為什麼不用 Docker?
-
-Docker 是原本的計畫,而且真的可以動——但實際安裝 Docker Desktop 本身,
-結果又慢又麻煩,而且一旦確定實際的分析只需要幾個單純可以用 pip 裝的
-Python 套件(不用 conda,沒有什麼奇怪的東西),虛擬環境就可以做一模
-一樣的事,要裝的東西少很多,可能出錯的地方也少很多。
+- **其他看起來怪怪的地方**:重新執行一次 Step 1
+  (`bash script/mac/step1_setup.sh` / `script\windows\step1_setup.bat`)
+  ——重複執行很安全,它會清楚重新回報到底缺什麼。

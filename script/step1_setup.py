@@ -10,8 +10,8 @@ docs/native_setup_guide.md for the full beginner-friendly walkthrough
 (how to install Python, open a terminal, etc., if you need that).
 
 Usage (from a terminal, after downloading/unzipping this repo):
-    python3 script/setup.py      (Mac/Linux)
-    python script\\setup.py       (Windows)
+    python3 script/step1_setup.py      (Mac/Linux)
+    python script\\step1_setup.py       (Windows)
 
 Safe to re-run — every step skips work that's already done.
 """
@@ -48,7 +48,7 @@ DATA_FILES = [
     # (SPrediXcan.py-based, needing --covariance) is superseded — no
     # covariance file exists for either on Zenodo, and S-PrediXcan
     # requires one (see discussion.md 2026-09-22). The working path as
-    # of 2026-10-01 is script/run_native_singlecell.{sh,py}, which uses
+    # of 2026-10-01 is script/step3_run_native_singlecell.{sh,py}, which uses
     # individual-level PrediXcan.py against SYNTHETIC genotype data in
     # celltype_genotype_synthetic/ (see
     # sever_folder/script/generate_synthetic_celltype_genotypes.py) —
@@ -67,7 +67,7 @@ GWAS_FILE_SIZE = 32650046
 
 # tissue.txt / celltype.txt are tiny and fixed (match the actual toy-data
 # scope, see docs/data_requirements.md) — generated directly rather than
-# fetched. celltype.txt feeds script/run_native_singlecell.{sh,py}.
+# fetched. celltype.txt feeds script/step3_run_native_singlecell.{sh,py}.
 TISSUE_FILE_CONTENT = "Spleen\nWhole_Blood\n"
 CELLTYPE_FILE_CONTENT = "CD14-positive_monocyte\nplasmablast\n"
 
@@ -169,7 +169,7 @@ def install_requirements():
             print("ready-made package for it, nothing to compile):")
             print("    winget install -e --id Python.Python.3.11")
             print("then re-run setup using it specifically:")
-            print("    py -3.11 script\\setup.py")
+            print("    py -3.11 script\\step1_setup.py")
             print("=" * 66)
         raise
     run([VENV_PYTHON, "-m", "pip", "install", "-q", "-r", req_file])
@@ -276,9 +276,9 @@ if __name__ == "__main__":
     run_check()
     print("\nSetup finished. Next: run the workshop script —")
     if IS_WINDOWS:
-        print(r"    venv\Scripts\python.exe script\run_native_tissue.py")
-        print(r"    venv\Scripts\python.exe script\run_native_singlecell.py  (optional, cell-type track)")
+        print(r"    venv\Scripts\python.exe script\step2_run_native_tissue.py")
+        print(r"    venv\Scripts\python.exe script\step3_run_native_singlecell.py  (optional, cell-type track)")
     else:
-        print("    bash script/run_native_tissue.sh")
-        print("    bash script/run_native_singlecell.sh  (optional, cell-type track)")
+        print("    bash script/step2_run_native_tissue.sh")
+        print("    bash script/step3_run_native_singlecell.sh  (optional, cell-type track)")
     print("(see docs/native_setup_guide.md if anything above said MISSING)")

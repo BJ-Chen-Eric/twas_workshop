@@ -6,9 +6,9 @@ celltype_genotype_synthetic/ — never real individuals; see
 sever_folder/script/generate_synthetic_celltype_genotypes.py (and
 discussion.md 2026-09-30/2026-10-01) for how that data was made and why
 synthetic. Skips gracefully for any cell type without generated data
-yet. Cross-platform equivalent of script/run_native_singlecell.sh (that
-one's Mac/Linux-only, bash-based) — use this one on Windows, or anywhere
-you'd rather not rely on bash.
+yet. Cross-platform equivalent of script/step3_run_native_singlecell.sh
+(that one's Mac/Linux-only, bash-based) — use this one on Windows, or
+anywhere you'd rather not rely on bash.
 
 IMPORTANT: the synthetic genotypes have no real linkage/haplotype
 structure between SNPs (deliberate, for safety), so predicted
@@ -17,9 +17,9 @@ demonstrates the pipeline running end-to-end on an individual-level
 genotype input — it is NOT a real biological finding. See
 docs/method_overview.md.
 
-Usage (from a terminal, after script/setup.py has finished successfully):
-    venv/bin/python script/run_native_singlecell.py         (Mac/Linux)
-    venv\\Scripts\\python.exe script\\run_native_singlecell.py  (Windows)
+Usage (from a terminal, after script/step1_setup.py has finished successfully):
+    venv/bin/python script/step3_run_native_singlecell.py         (Mac/Linux)
+    venv\\Scripts\\python.exe script\\step3_run_native_singlecell.py  (Windows)
 """
 import os
 import subprocess

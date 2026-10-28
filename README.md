@@ -28,40 +28,60 @@ genetic data required.)*
 **New to the command line, or unsure how to even download this?** Start
 at [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) — it
 walks through everything from zero: downloading this repo, opening a
-terminal, and running the one setup script. Works on Mac, Windows, and
+terminal, and running the setup script. Works on Mac, Windows, and
 Linux.
 
-### 1. Download this repo
-Click the green **`<> Code`** button above → **`Download ZIP`**, then
-unzip it (or `git clone` this repo, if you already use git).
+**Before Step 1**: download this repo (click the green **`<> Code`**
+button above → **`Download ZIP`**, then unzip it — or `git clone` it,
+if you already use git) and open a terminal in the unzipped folder
+(see [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) if
+you're not sure how).
 
-### 2. Open a terminal in the unzipped folder
-See [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) Step 2
-if you're not sure how — it covers Mac, Windows, and Linux.
-
-### 3. Run setup, then the analysis
+### Step 1 — Set up (run once)
 **Mac**:
 ```bash
-bash script/mac/setup.sh             # one script: checks Python, creates a
+bash script/mac/step1_setup.sh       # one script: checks Python, creates a
                                       # venv, installs packages, downloads
                                       # toy data, checks everything's ready
-bash script/run_native_tissue.sh     # runs the main (tissue-level) analysis
-bash script/run_native_singlecell.sh # optional: cell-type track, see below
 ```
 **Windows**:
 ```powershell
-script\windows\setup.bat
-venv\Scripts\python.exe script\run_native_tissue.py
-venv\Scripts\python.exe script\run_native_singlecell.py
+script\windows\step1_setup.bat
 ```
-**Prefer double-clicking to typing?** `script/mac/setup.command` /
-`script\windows\setup.bat` do the exact same thing as the typed
-commands above — just double-click instead:
-- **Mac**: double-click `script/mac/setup.command`. If macOS shows a
-  warning the first time, right-click the file → **Open** → confirm.
-- **Windows**: double-click `script\windows\setup.bat` directly (it's
-  already the double-clickable form). If Windows shows "Windows
-  protected your PC," click **More info** → **Run anyway**.
+
+### Step 2 — Run the main analysis (tissue-level)
+**Mac**:
+```bash
+bash script/step2_run_native_tissue.sh
+```
+**Windows**:
+```powershell
+venv\Scripts\python.exe script\step2_run_native_tissue.py
+```
+
+### Step 3 — Optional: the cell-type track
+**Mac**:
+```bash
+bash script/step3_run_native_singlecell.sh
+```
+**Windows**:
+```powershell
+venv\Scripts\python.exe script\step3_run_native_singlecell.py
+```
+See [below](#optional-the-cell-type-track) for what this track actually
+is before you run it.
+
+**Prefer double-clicking to typing?** Every command above has a
+double-clickable equivalent that does the exact same thing:
+- **Mac**: `script/mac/step1_setup.command`,
+  `step2_run_native_tissue.command`,
+  `step3_run_native_singlecell.command`. If macOS shows a warning the
+  first time, right-click the file → **Open** → confirm.
+- **Windows**: `script\windows\step1_setup.bat`,
+  `step2_run_native_tissue.bat`, `step3_run_native_singlecell.bat` —
+  double-click any of them directly (they're already in the
+  double-clickable form). If Windows shows "Windows protected your
+  PC," click **More info** → **Run anyway**.
 
 (These warnings are normal for any script downloaded from the internet
 that isn't from a registered publisher — not a sign anything's wrong.)
@@ -83,14 +103,14 @@ expected across different computers), it worked.
 
 ## Optional: The Cell-Type Track
 
-`run_native_singlecell.sh`/`.py` runs the same kind of analysis, but for
-individual immune cell types instead of whole tissues, using a different
-underlying method (individual-level `PrediXcan.py` instead of
-`S-PrediXcan.py`). **The genotype data behind this track is entirely
-SYNTHETIC** — simulated from real allele frequencies, but with no real
-person's actual genome and no real genetic linkage structure preserved
-(see the comments in
-[`script/run_native_singlecell.py`](./script/run_native_singlecell.py)
+Step 3 (`step3_run_native_singlecell.sh`/`.py`) runs the same kind of
+analysis, but for individual immune cell types instead of whole
+tissues, using a different underlying method (individual-level
+`PrediXcan.py` instead of `S-PrediXcan.py`). **The genotype data behind
+this track is entirely SYNTHETIC** — simulated from real allele
+frequencies, but with no real person's actual genome and no real
+genetic linkage structure preserved (see the comments in
+[`script/step3_run_native_singlecell.py`](./script/step3_run_native_singlecell.py)
 for the full reasoning). Because of that, its results are close to
 statistical noise by design — this track exists to demonstrate the
 individual-level pipeline running end-to-end, not to show a real
@@ -110,11 +130,12 @@ your own `out/CD14-positive_monocyte_*` files against it the same way.
   summary statistics)
 - `docs/causal_followup_methods.md` — additional info: what comes after
   a TWAS hit (MR, COLOC, SuSiE)
-- `script/mac/setup.sh` (+ `setup.command`) — one-step setup on Mac
-- `script/windows/setup.bat` — one-step setup on Windows
-- `script/run_native_tissue.py` / `.sh` — runs the main analysis
-- `script/run_native_singlecell.py` / `.sh` — optional cell-type track
-  (synthetic data — see above)
+- `script/mac/step1_setup.sh` (+ `.command`) / `script/windows/step1_setup.bat`
+  — Step 1: one-step setup
+- `script/step2_run_native_tissue.py` / `.sh` (+ `.command`/`.bat`
+  equivalents) — Step 2: runs the main analysis
+- `script/step3_run_native_singlecell.py` / `.sh` (+ `.command`/`.bat`
+  equivalents) — Step 3: optional cell-type track (synthetic data — see above)
 - `celltype_genotype_synthetic/` — the synthetic genotype/phenotype
   data behind the cell-type track
 - `demo_out/` — reference results, to check your own output against

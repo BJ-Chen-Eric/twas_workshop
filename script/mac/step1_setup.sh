@@ -1,7 +1,7 @@
 #!/bin/bash
 # THE ONE THING TO RUN on Mac — checks for Python; if missing, offers to
 # install Homebrew (if needed) then Python via Homebrew, each gated by a
-# y/n (both need your password). Then hands off to script/setup.py.
+# y/n (both need your password). Then hands off to script/step1_setup.py.
 # UNTESTED as of 2026-09-21 (no live runs on Eric's machine) — verify
 # before relying on it. See docs/native_setup_guide.md.
 
@@ -19,7 +19,7 @@ manual_instructions() {
     echo "   set up the first time — see docs/native_setup_guide.md)."
     echo "2. Run the installer, following the prompts."
     echo "3. Close this terminal, open a new one, and run this script again:"
-    echo "     bash script/mac/setup.sh"
+    echo "     bash script/mac/step1_setup.sh"
     echo "=================================================================="
 }
 
@@ -66,4 +66,4 @@ if [ -z "$PYTHON" ]; then
 fi
 
 echo "Found Python: $($PYTHON --version)"
-exec "$PYTHON" script/setup.py
+exec "$PYTHON" script/step1_setup.py

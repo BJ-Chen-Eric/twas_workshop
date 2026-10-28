@@ -15,10 +15,21 @@ set -e
 # demonstrates the pipeline running end-to-end on an individual-level
 # genotype input — it is NOT a real biological finding. See
 # docs/method_overview.md.
+#
+# Calls the venv's python explicitly (not bare "python" off PATH,
+# which can resolve to an unrelated install and silently skip the
+# pinned venv entirely).
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSHOP_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$WORKSHOP_DIR"
+
+PYTHON="$WORKSHOP_DIR/venv/bin/python"
+if [ ! -x "$PYTHON" ]; then
+    echo "venv not found — run setup first (script/mac/step1_setup.sh or"
+    echo "script/mac/step1_setup.command), then re-run this."
+    exit 1
+fi
 
 MODEL_DIR="celltype_twas_weight"
 CELLTYPE_FILE="celltype.txt"
@@ -45,7 +56,7 @@ while read -r celltype || [ -n "$celltype" ]; do
     echo "==> Running PrediXcan for $celltype (synthetic genotype data)"
     ran_any=1
 
-    python "$PREDIXCAN" \
+    "$PYTHON" "$PREDIXCAN" \
         --model_db_path "${MODEL_DIR}/${celltype}.db" \
         --text_genotypes "$DOSAGE" \
         --text_sample_ids "$SAMPLE_IDS" \

@@ -1,14 +1,24 @@
 #!/bin/bash
 set -e
 # Runs the actual S-PrediXcan workshop analysis against the venv created
-# by script/setup.py (see docs/native_setup_guide.md). Portable: locates
-# the workshop root relative to this script's own location. Windows or
-# bash-averse users: script/run_native_tissue.py does the same thing in pure
-# Python.
+# by script/step1_setup.py (see docs/native_setup_guide.md). Portable:
+# locates the workshop root relative to this script's own location,
+# and calls that venv's python explicitly (not bare "python" off PATH,
+# which can resolve to an unrelated install — e.g. a conda base
+# environment — and silently skip the pinned venv entirely). Windows
+# or bash-averse users: script/step2_run_native_tissue.py does the
+# same thing in pure Python.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSHOP_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$WORKSHOP_DIR"
+
+PYTHON="$WORKSHOP_DIR/venv/bin/python"
+if [ ! -x "$PYTHON" ]; then
+    echo "venv not found — run setup first (script/mac/step1_setup.sh or"
+    echo "script/mac/step1_setup.command), then re-run this."
+    exit 1
+fi
 
 MODEL_DIR="tissue_twas_weight"
 TISSUE_FILE="tissue.txt"
@@ -22,7 +32,7 @@ while read -r tissue || [ -n "$tissue" ]; do
     [ -z "$tissue" ] && continue
     echo "==> Running SPrediXcan for $tissue"
 
-    python "$SPREDIXCAN" \
+    "$PYTHON" "$SPREDIXCAN" \
         --model_db_path "${MODEL_DIR}/en_${tissue}.db" \
         --covariance "${MODEL_DIR}/en_${tissue}.txt.gz" \
         --gwas_file "$GWAS_FILE" \

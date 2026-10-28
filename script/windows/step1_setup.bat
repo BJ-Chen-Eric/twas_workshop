@@ -12,11 +12,11 @@ REM needing Microsoft C++ Build Tools most computers don't have (see
 REM discussion.md 2026-09-30). Earlier version of this script only
 REM checked for an existing 3.11 without ever offering to install it
 REM when 3.12+ was already on PATH -- fixed the same day after a real
-REM run showed the gap. Then runs script\setup.py. This logic is NOT
+REM run showed the gap. Then runs script\step1_setup.py. This logic is NOT
 REM hands-on verified on Windows (no Windows machine available) -- the
 REM underlying pandas build failure it works around IS confirmed real.
 REM See docs/native_setup_guide.md. Double-clickable, or run from
-REM PowerShell/Command Prompt: script\windows\setup.bat
+REM PowerShell/Command Prompt: script\windows\step1_setup.bat
 
 cd /d "%~dp0..\.."
 
@@ -137,7 +137,7 @@ pause
 exit /b 1
 
 :run_setup
-python script\setup.py
+python script\step1_setup.py
 
 :end
 echo.
@@ -155,5 +155,5 @@ echo.
 echo Using Python 3.11 for this project's venv instead of %PYVER% --
 echo pandas has a ready-made package for 3.11, so nothing needs
 echo compiling. Your existing Python installation is untouched.
-py -3.11 script\setup.py
+py -3.11 script\step1_setup.py
 exit /b 0
