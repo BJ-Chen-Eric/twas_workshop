@@ -8,6 +8,44 @@ This setup needs only Python itself — nothing else to install. All toy
 data (weight models and the GWAS summary-statistics file) downloads
 automatically from Zenodo the first time you run setup.
 
+
+---
+
+## Quick version
+
+For anyone already comfortable with a terminal:
+```bash
+# 1. Download + unzip this repo, cd into it, then:
+bash script/mac/step1_setup.sh             # Step 1: checks Python, venv, install, data, check
+bash script/step2_run_native_tissue.sh     # Step 2: or venv/bin/python script/step2_run_native_tissue.py
+bash script/step3_run_native_singlecell.sh # Step 3 (optional): cell-type track, synthetic data
+```
+Windows: `script\windows\step1_setup.bat` then
+`venv\Scripts\python.exe script\step2_run_native_tissue.py`.
+
+Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
+`patsy`, `h5py`, `sqlalchemy<2.0`, `pyliftover`, `statsmodels`. The
+toolkit (`tools/MetaXcan-master/software/`) ships in the repo; the toy
+weight models (~130MB) and the GWAS file (~31MB) both download
+automatically from Zenodo.
+
+## Optional: double-click instead of typing
+
+Steps 1-3's scripts do the exact same thing whether you type them or
+double-click these:
+- **Mac**: `script/mac/step1_setup.command`,
+  `step2_run_native_tissue.command`,
+  `step3_run_native_singlecell.command`. If macOS shows a warning the
+  first time, right-click the file → **Open** → confirm.
+- **Windows**: `script\windows\step1_setup.bat`,
+  `step2_run_native_tissue.bat`, `step3_run_native_singlecell.bat` —
+  double-click any of them directly (they're already in the
+  double-clickable form). If Windows shows "Windows protected your
+  PC", click **More info** → **Run anyway**.
+
+(These warnings are normal for any script downloaded from the internet
+that isn't from a registered publisher — not a sign anything's wrong.)
+
 ---
 
 ## Before you start — download the folder and open a terminal in it
@@ -118,41 +156,6 @@ If you run either Step 2 or Step 3 before Step 1, you'll get a clear
 
 ---
 
-## Quick version
-
-For anyone already comfortable with a terminal:
-```bash
-# 1. Download + unzip this repo, cd into it, then:
-bash script/mac/step1_setup.sh             # Step 1: checks Python, venv, install, data, check
-bash script/step2_run_native_tissue.sh     # Step 2: or venv/bin/python script/step2_run_native_tissue.py
-bash script/step3_run_native_singlecell.sh # Step 3 (optional): cell-type track, synthetic data
-```
-Windows: `script\windows\step1_setup.bat` then
-`venv\Scripts\python.exe script\step2_run_native_tissue.py`.
-
-Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
-`patsy`, `h5py`, `sqlalchemy<2.0`, `pyliftover`, `statsmodels`. The
-toolkit (`tools/MetaXcan-master/software/`) ships in the repo; the toy
-weight models (~130MB) and the GWAS file (~31MB) both download
-automatically from Zenodo.
-
-## Optional: double-click instead of typing
-
-Steps 1-3's scripts do the exact same thing whether you type them or
-double-click these:
-- **Mac**: `script/mac/step1_setup.command`,
-  `step2_run_native_tissue.command`,
-  `step3_run_native_singlecell.command`. If macOS shows a warning the
-  first time, right-click the file → **Open** → confirm.
-- **Windows**: `script\windows\step1_setup.bat`,
-  `step2_run_native_tissue.bat`, `step3_run_native_singlecell.bat` —
-  double-click any of them directly (they're already in the
-  double-clickable form). If Windows shows "Windows protected your
-  PC", click **More info** → **Run anyway**.
-
-(These warnings are normal for any script downloaded from the internet
-that isn't from a registered publisher — not a sign anything's wrong.)
-
 ## Troubleshooting
 
 - **Step 1 says Python wasn't found**: it'll print a link and instructions
@@ -187,12 +190,3 @@ that isn't from a registered publisher — not a sign anything's wrong.)
 - **Something else looks wrong**: re-run Step 1
   (`bash script/mac/step1_setup.sh` / `script\windows\step1_setup.bat`)
   — it's safe to run repeatedly, and re-reports exactly what's missing.
-
-## Why not Docker?
-
-Docker was the original plan and did work — but installing Docker Desktop
-itself turned out to be slow and complicated in practice, and once it was
-clear the actual analysis only needs a handful of plain `pip`-installable
-Python packages (no conda, nothing exotic), a virtual environment turned
-out to do the identical job with far less to install and far less that
-can go wrong.

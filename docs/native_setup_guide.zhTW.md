@@ -10,6 +10,41 @@
 
 ---
 
+## 快速版
+
+給已經很習慣用終端機的人:
+```bash
+# 1. 下載並解壓縮這個 repo,cd 進去之後:
+bash script/mac/step1_setup.sh             # Step 1:檢查 Python、venv、安裝、下載資料、檢查
+bash script/step2_run_native_tissue.sh     # Step 2:或 venv/bin/python script/step2_run_native_tissue.py
+bash script/step3_run_native_singlecell.sh # Step 3(選用):cell-type 線,合成資料
+```
+Windows:`script\windows\step1_setup.bat`,然後
+`venv\Scripts\python.exe script\step2_run_native_tissue.py`。
+
+套件清單(見 `requirements.txt`):`numpy<2.0`、`pandas<2.0`、`scipy`、
+`patsy`、`h5py`、`sqlalchemy<2.0`、`pyliftover`、`statsmodels`。工具本身
+(`tools/MetaXcan-master/software/`)包在 repo 裡;toy 權重模型
+(約 130MB)跟 GWAS 檔(約 31MB)都會自動從 Zenodo 下載。
+
+## 選用:用雙擊取代打字
+
+Step 1-3 的腳本不管打字執行還是雙擊,做的事完全一樣:
+- **Mac**:`script/mac/step1_setup.command`、
+  `step2_run_native_tissue.command`、
+  `step3_run_native_singlecell.command`。如果 macOS 第一次跳出警告,
+  右鍵點檔案 → **打開** → 確認。
+- **Windows**:`script\windows\step1_setup.bat`、
+  `step2_run_native_tissue.bat`、
+  `step3_run_native_singlecell.bat`——任何一個都可以直接雙擊(它們
+  本來就是雙擊用的形式)。如果 Windows 顯示「Windows 已保護你的
+  電腦」,點**其他資訊** → **仍要執行**。
+
+(這些警告對任何從網路上下載、不是來自已註冊發行者的腳本來說都很正常
+——不代表哪裡出錯了。)
+
+---
+
 ## 開始之前——下載資料夾、打開終端機
 
 1. 在瀏覽器裡打開這個 repo 的 GitHub 頁面。
@@ -109,38 +144,6 @@ venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux 也可以這樣
 
 ---
 
-## 快速版
-
-給已經很習慣用終端機的人:
-```bash
-# 1. 下載並解壓縮這個 repo,cd 進去之後:
-bash script/mac/step1_setup.sh             # Step 1:檢查 Python、venv、安裝、下載資料、檢查
-bash script/step2_run_native_tissue.sh     # Step 2:或 venv/bin/python script/step2_run_native_tissue.py
-bash script/step3_run_native_singlecell.sh # Step 3(選用):cell-type 線,合成資料
-```
-Windows:`script\windows\step1_setup.bat`,然後
-`venv\Scripts\python.exe script\step2_run_native_tissue.py`。
-
-套件清單(見 `requirements.txt`):`numpy<2.0`、`pandas<2.0`、`scipy`、
-`patsy`、`h5py`、`sqlalchemy<2.0`、`pyliftover`、`statsmodels`。工具本身
-(`tools/MetaXcan-master/software/`)包在 repo 裡;toy 權重模型
-(約 130MB)跟 GWAS 檔(約 31MB)都會自動從 Zenodo 下載。
-
-## 選用:用雙擊取代打字
-
-Step 1-3 的腳本不管打字執行還是雙擊,做的事完全一樣:
-- **Mac**:`script/mac/step1_setup.command`、
-  `step2_run_native_tissue.command`、
-  `step3_run_native_singlecell.command`。如果 macOS 第一次跳出警告,
-  右鍵點檔案 → **打開** → 確認。
-- **Windows**:`script\windows\step1_setup.bat`、
-  `step2_run_native_tissue.bat`、
-  `step3_run_native_singlecell.bat`——任何一個都可以直接雙擊(它們
-  本來就是雙擊用的形式)。如果 Windows 顯示「Windows 已保護你的
-  電腦」,點**其他資訊** → **仍要執行**。
-
-(這些警告對任何從網路上下載、不是來自已註冊發行者的腳本來說都很正常
-——不代表哪裡出錯了。)
 
 ## 疑難排解
 
