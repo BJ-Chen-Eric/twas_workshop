@@ -12,9 +12,10 @@
 
 ## 快速版
 
-給已經很習慣用終端機的人:
+給已經很習慣用終端機的人:先下載這個 repo(點這個 repo GitHub 頁面上
+綠色的 **`<> Code`** 按鈕 → **`Download ZIP`** → 解壓縮——如果你會用
+git,`git clone` 也可以),`cd` 進解壓縮出來的資料夾,然後:
 ```bash
-# 1. 下載並解壓縮這個 repo,cd 進去之後:
 bash script/mac/step1_setup.sh             # Step 1:檢查 Python、venv、安裝、下載資料、檢查
 bash script/step2_run_native_tissue.sh     # Step 2:或 venv/bin/python script/step2_run_native_tissue.py
 bash script/step3_run_native_singlecell.sh # Step 3(選用):cell-type 線,合成資料
@@ -28,6 +29,11 @@ Windows:`script\windows\step1_setup.bat`,然後
 (約 130MB)跟 GWAS 檔(約 31MB)都會自動從 Zenodo 下載。
 
 ## 選用:用雙擊取代打字
+
+首先,下載這個 repo:點這個 repo GitHub 頁面上綠色的
+**`<> Code`** 按鈕 → **`Download ZIP`**,然後解壓縮(Mac 上雙擊
+`.zip` 檔;Windows 上右鍵點它 → **全部解壓縮**),再打開解壓縮出來的
+資料夾。
 
 Step 1-3 的腳本不管打字執行還是雙擊,做的事完全一樣:
 - **Mac**:`script/mac/step1_setup.command`、

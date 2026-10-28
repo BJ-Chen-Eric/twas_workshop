@@ -13,9 +13,11 @@ automatically from Zenodo the first time you run setup.
 
 ## Quick version
 
-For anyone already comfortable with a terminal:
+For anyone already comfortable with a terminal: download this repo
+(click the green **`<> Code`** button on this repo's GitHub page →
+**`Download ZIP`** → unzip it — or `git clone` it, if you use git),
+`cd` into the unzipped folder, then:
 ```bash
-# 1. Download + unzip this repo, cd into it, then:
 bash script/mac/step1_setup.sh             # Step 1: checks Python, venv, install, data, check
 bash script/step2_run_native_tissue.sh     # Step 2: or venv/bin/python script/step2_run_native_tissue.py
 bash script/step3_run_native_singlecell.sh # Step 3 (optional): cell-type track, synthetic data
@@ -30,6 +32,11 @@ weight models (~130MB) and the GWAS file (~31MB) both download
 automatically from Zenodo.
 
 ## Optional: double-click instead of typing
+
+First, download this repo: click the green **`<> Code`** button on
+this repo's GitHub page → **`Download ZIP`**, then unzip it (on Mac,
+double-click the `.zip`; on Windows, right-click it → **Extract All**)
+and open the resulting folder.
 
 Steps 1-3's scripts do the exact same thing whether you type them or
 double-click these:
