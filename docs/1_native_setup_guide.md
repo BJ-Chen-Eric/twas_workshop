@@ -22,8 +22,10 @@ bash script/mac/step1_setup.sh             # Step 1: checks Python, venv, instal
 bash script/step2_run_native_tissue.sh     # Step 2: or venv/bin/python script/step2_run_native_tissue.py
 bash script/step3_run_native_singlecell.sh # Step 3 (optional): cell-type track, synthetic data
 ```
-Windows: `script\windows\step1_setup.bat` then
-`venv\Scripts\python.exe script\step2_run_native_tissue.py`.
+Windows: `.\script\windows\step1_setup.bat` then
+`.\venv\Scripts\python.exe script\step2_run_native_tissue.py` (the
+leading `.\` is required in PowerShell, even for a path like this one —
+see the note under Step 1 below).
 
 Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
 `patsy`, `h5py`, `sqlalchemy<2.0`, `pyliftover`, `statsmodels`. The
@@ -95,8 +97,13 @@ bash script/mac/step1_setup.sh
 ```
 **Windows**:
 ```powershell
-script\windows\step1_setup.bat
+.\script\windows\step1_setup.bat
 ```
+*(The leading `.\` matters in PowerShell — unlike Command Prompt,
+PowerShell won't run a file from the current folder unless you tell it
+to explicitly, even when the path already has subfolders in it. Typing
+it without `.\` fails with "...is not recognized as the name of a
+cmdlet, function, script file, or operable program.")*
 
 This single script (no typing anything else needed) — **including
 checking whether Python is even installed**, so this is genuinely the
@@ -136,7 +143,7 @@ bash script/step2_run_native_tissue.sh
 ```
 **Windows** (or anywhere you'd rather not use bash):
 ```powershell
-venv\Scripts\python.exe script\step2_run_native_tissue.py
+.\venv\Scripts\python.exe script\step2_run_native_tissue.py
 ```
 ```bash
 venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux equivalent, if preferred
@@ -178,6 +185,20 @@ If you run either Step 2 or Step 3 before Step 1, you'll get a clear
   or `.bat` file**: expected for downloaded scripts, see the note
   above — or just use the typed-command version instead, which doesn't
   trigger these.
+- **On Mac, double-clicking a `.command` file says "could not be
+  executed because you do not have appropriate access privileges"**:
+  downloading this repo as a ZIP (rather than `git clone`) can
+  sometimes strip the "executable" permission from `.command` files
+  when macOS unzips it. Fix: in a terminal, run
+  `chmod +x script/mac/*.command` once, then double-click again — or
+  just use the typed-command version instead (`bash script/mac/...`),
+  which doesn't need that permission at all.
+- **PowerShell says "...is not recognized as the name of a cmdlet,
+  function, script file, or operable program"**: you likely typed a
+  command without its leading `.\` — PowerShell requires it to run
+  anything from the current folder (unlike Command Prompt), even for a
+  path that already has subfolders in it like the ones in this guide.
+  Re-check that your command starts with `.\`, exactly as shown above.
 - **Downloading the toy data fails with "Too Many Requests" or a
   gateway timeout**: Zenodo (where the toy data is hosted) is a shared
   public service and occasionally rate-limits or times out, especially
@@ -195,5 +216,5 @@ If you run either Step 2 or Step 3 before Step 1, you'll get a clear
   rebuild it from scratch. If it keeps happening, move this folder
   outside the cloud-synced location.
 - **Something else looks wrong**: re-run Step 1
-  (`bash script/mac/step1_setup.sh` / `script\windows\step1_setup.bat`)
+  (`bash script/mac/step1_setup.sh` / `.\script\windows\step1_setup.bat`)
   — it's safe to run repeatedly, and re-reports exactly what's missing.

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 # Runs the actual S-PrediXcan workshop analysis against the venv created
-# by script/step1_setup.py (see docs/native_setup_guide.md). Portable:
+# by script/step1_setup.py (see docs/1_native_setup_guide.md). Portable:
 # locates the workshop root relative to this script's own location,
 # and calls that venv's python explicitly (not bare "python" off PATH,
 # which can resolve to an unrelated install — e.g. a conda base

@@ -15,7 +15,7 @@ structure between SNPs (deliberate, for safety), so predicted
 expression from this run will be close to statistical noise. This
 demonstrates the pipeline running end-to-end on an individual-level
 genotype input — it is NOT a real biological finding. See
-docs/method_overview.md.
+docs/2_method_overview.md.
 
 Usage (from a terminal, after script/step1_setup.py has finished successfully):
     venv/bin/python script/step3_run_native_singlecell.py         (Mac/Linux)
@@ -72,4 +72,4 @@ if __name__ == "__main__":
     print(f"\n==> Done — NOTE: this used SYNTHETIC genotype data with no real")
     print("    linkage structure, so results are close to statistical noise")
     print("    by design (demonstrates the pipeline running end-to-end, not a")
-    print("    real biological finding). See docs/method_overview.md.")
+    print("    real biological finding). See docs/2_method_overview.md.")

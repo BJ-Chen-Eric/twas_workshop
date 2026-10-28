@@ -62,6 +62,13 @@ GWAS summary statistics 檔案——跟這個 workshop 裡
 `step2_run_native_tissue.py`/`step2_run_native_tissue.sh` 讀進去的檔案是同一種東西,只是換成
 真正的性狀、真正(QC 過、補值過)的世代,而不是這裡用的 toy 設定。
 
+(這份 toy 檔案的檔名本身就把整條流程解密了:
+`chr10_imputed_gwas.pheno.glm.logistic.hybrid`——`chr10` 是染色體,
+`imputed` 標記它經過了上面的補值步驟,而 `glm.logistic.hybrid` 是
+PLINK2 跑 `--glm` 關聯檢定、針對二元(病例/對照)性狀時的標準輸出
+副檔名:邏輯迴歸,用的是 PLINK2 預設的「hybrid」演算法——遇到一般
+邏輯迴歸收斂不好的變異時,會改用 Firth 偏差校正的邏輯迴歸。)
+
 ## 想看真正、詳細的版本嗎?
 
 這份文件刻意只寫概念性的總覽,不是逐指令的操作手冊——完整的流程

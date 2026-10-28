@@ -6,7 +6,7 @@ Does everything: creates a virtual environment, installs the required
 packages into it, downloads the toy data, and checks everything is ready.
 Pure standard library only (no dependencies of its own), so it runs with
 any stock Python 3 install on Mac, Windows, or Linux — see
-docs/native_setup_guide.md for the full beginner-friendly walkthrough
+docs/1_native_setup_guide.md for the full beginner-friendly walkthrough
 (how to install Python, open a terminal, etc., if you need that).
 
 Usage (from a terminal, after downloading/unzipping this repo):
@@ -281,4 +281,4 @@ if __name__ == "__main__":
     else:
         print("    bash script/step2_run_native_tissue.sh")
         print("    bash script/step3_run_native_singlecell.sh  (optional, cell-type track)")
-    print("(see docs/native_setup_guide.md if anything above said MISSING)")
+    print("(see docs/1_native_setup_guide.md if anything above said MISSING)")

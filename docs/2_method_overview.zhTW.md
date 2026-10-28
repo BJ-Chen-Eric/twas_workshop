@@ -6,6 +6,28 @@
 transcriptome-wide association study(TWAS)要檢定的問題——而
 **S-PrediXcan** 就是我們用來回答這個問題的工具。
 
+## 整體流程
+
+這份文件接下來會詳細解釋每一塊,這裡先看整體怎麼串起來的:
+
+```
+   [GTEx 參考世代]
+   (真實的基因型 + 真實量測到的表現量,同一群人)
+             │
+             ▼  (Elastic Net 訓練——事先做好一次,
+             │   不是這個 workshop 會執行的步驟)
+   [權重模型:en_<tissue>.db + 它的 covariance 檔案]
+             │
+             │            [你的 GWAS summary statistics]
+             │                       │
+             └───────────┬───────────┘
+                         ▼
+                  [S-PrediXcan]
+                         │
+                         ▼
+          [每個基因一列:zscore、pvalue、...]
+```
+
 ## 為什麼是「預測的」表現量,不是實際量測的表現量
 
 要量測真實的基因表現量,需要組織樣本——大部分研究(包括這個 workshop
@@ -61,7 +83,8 @@ Whole_Blood)各跑一次迴圈,每次都用下面這些東西呼叫 S-PrediXcan:
   彼此的相關程度,統計上要有效需要這個)
 - 一條染色體的 **GWAS summary statistics**
   (`gwas_ss/chr10_imputed_gwas...hybrid`)——真實的 SNP 層級關聯結果,
-  不需要個人層級基因型
+  不需要個人層級基因型(想知道原始的基因型樣本是怎麼變成這種檔案
+  的?見 [`3_gwas_to_summary_stats.zhTW.md`](./3_gwas_to_summary_stats.zhTW.md))
 - 這份 GWAS 跑的時候用的樣本數(`--gwas_N`)
 
 對於權重模型有涵蓋、而且跟 GWAS 有 SNP 重疊的每個基因,都會輸出一列
@@ -107,6 +130,27 @@ SNP,所以不像原始 GWAS 結果那樣每個 SNP 都有唯一座標。如果�
 基因組位置畫圖(例如 Manhattan 風格的圖),需要另外查每個基因的座標
 (例如透過 Ensembl/gencode)。
 
+## 我要怎麼挑出「有意義」的基因?
+
+面對幾百甚至幾千列的原始 CSV,光看是看不出什麼的。下面三個檢查不是
+嚴格的通過/不通過規則,而是用來分辨「值得仔細看」跟「大概只是雜訊」
+的合理方式:
+
+1. **這個模型本身對這個基因夠不夠準?** 看
+   `pred_perf_pval < 0.05` 而且 `pred_perf_r2 > 0.01`——也就是這個
+   權重模型在訓練時,本身就有合理預測出真實的表現量。如果連自己的
+   訓練資料都預測不好,它對你的 GWAS 算出來的結果也不值得信任。
+2. **GWAS 的關聯強度本身夠不夠強?** 常見的做法是用
+   transcriptome-wide 的 Bonferroni 門檻:`0.05 / (實際測試的基因
+   數量)`。常被引用的「約 2.5e-6」這個數字,是假設測試接近完整的
+   ~20,000 個基因的轉錄體——**這個 workshop 的 toy 資料測試的基因數
+   少得多**(自己數一下輸出 CSV 的列數就知道),所以這個門檻在這裡
+   其實比實際需要的更嚴格。請用你自己輸出的列數算出自己的門檻,
+   不要直接照抄 `2.5e-6`。
+3. **這個結果是靠夠多的 SNP 撐起來的嗎?** 看 `n_snps_used` 是不是
+   太小(例如只有 1)——只靠一個 SNP 撐起來的結果,其實就是那一個
+   SNP 的 GWAS 訊號套上了一個基因的名字,不是真正多 SNP 的預測。
+
 ## 最重要的但書
 
 這裡出現顯著結果,代表那個基因*預測出來*的表現量跟 trait 有關聯——
@@ -116,13 +160,7 @@ SNP,所以不像原始 GWAS 結果那樣每個 SNP 都有唯一座標。如果�
 方法可以處理這個問題(檢查 GWAS 跟 eQTL 的訊號是不是真的共享同一個
 因果變異位點)——不在這場 workshop 的範圍內,但值得知道:這只是個
 起點,不是最終答案。想知道這些方法(MR、COLOC、SuSiE)的白話介紹,
-見 [`causal_followup_methods.zhTW.md`](./causal_followup_methods.zhTW.md)。
-
-## 一開始那份 GWAS 檔案是哪來的?
-
-這個 workshop 是從一份已經算好的 summary statistics 檔案開始的。如果
-想了解原始的基因型樣本是怎麼變成那份檔案的,見
-[`gwas_to_summary_stats.zhTW.md`](./gwas_to_summary_stats.zhTW.md)。
+見 [`4_causal_followup_methods.zhTW.md`](./4_causal_followup_methods.zhTW.md)。
 
 ## 那個選用的 cell-type 線是怎麼回事?
 
@@ -134,6 +172,12 @@ SNP,所以不像原始 GWAS 結果那樣每個 SNP 都有唯一座標。如果�
 最後這點很重要——鄰近 SNP 之間真實的連鎖,正是多 SNP 預測模型賴以
 運作的東西,沒有它,這裡的預測表現量本來就會接近統計雜訊。這條線是
 用來示範個人層級的流程能跑完,不是要示範真的生物學訊號。
+
+這條線目前涵蓋一個 cell type:`CD14-positive_monocyte`——執行的時候
+你會看到一行像「Skipping plasmablast — no synthetic genotype data for
+it yet」的訊息。這是預期的,不是錯誤:`celltype.txt` 裡列了第二個
+cell type(`plasmablast`)供未來使用,但目前還沒有產生它的合成基因型
+資料,所以腳本會優雅地跳過它,不會失敗。
 
 ### 怎麼看 cell-type 的輸出
 

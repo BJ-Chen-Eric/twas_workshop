@@ -20,8 +20,10 @@ bash script/mac/step1_setup.sh             # Step 1:檢查 Python、venv、安�
 bash script/step2_run_native_tissue.sh     # Step 2:或 venv/bin/python script/step2_run_native_tissue.py
 bash script/step3_run_native_singlecell.sh # Step 3(選用):cell-type 線,合成資料
 ```
-Windows:`script\windows\step1_setup.bat`,然後
-`venv\Scripts\python.exe script\step2_run_native_tissue.py`。
+Windows:`.\script\windows\step1_setup.bat`,然後
+`.\venv\Scripts\python.exe script\step2_run_native_tissue.py`
+(開頭的 `.\` 一定要加,PowerShell 即使路徑裡已經有子資料夾也一樣
+——詳見下面 Step 1 的說明)。
 
 套件清單(見 `requirements.txt`):`numpy<2.0`、`pandas<2.0`、`scipy`、
 `patsy`、`h5py`、`sqlalchemy<2.0`、`pyliftover`、`statsmodels`。工具本身
@@ -88,8 +90,13 @@ bash script/mac/step1_setup.sh
 ```
 **Windows**:
 ```powershell
-script\windows\step1_setup.bat
+.\script\windows\step1_setup.bat
 ```
+*(開頭的 `.\` 很重要——跟 Command Prompt 不一樣,PowerShell 不會直接
+執行目前資料夾裡的檔案,除非你明確這樣指定,就算路徑裡已經有子
+資料夾也一樣。沒加 `.\` 的話會出現「...is not recognized as the
+name of a cmdlet, function, script file, or operable program」
+的錯誤。)*
 
 這一支腳本(不用再打別的指令)——**連檢查有沒有裝 Python 都包在裡面
 了**:
@@ -125,7 +132,7 @@ bash script/step2_run_native_tissue.sh
 ```
 **Windows**(或任何你不想用 bash 的地方):
 ```powershell
-venv\Scripts\python.exe script\step2_run_native_tissue.py
+.\venv\Scripts\python.exe script\step2_run_native_tissue.py
 ```
 ```bash
 venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux 也可以這樣用
@@ -164,6 +171,17 @@ venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux 也可以這樣
 - **雙擊任何 `.command` 或 `.bat` 檔案時出現權限/安全性警告**:對
   下載下來的腳本來說是正常的,見上面的說明——或者乾脆改用打字執行的
   版本,就不會跳出這些警告。
+- **在 Mac 上雙擊 `.command` 檔案時出現「無法執行,因為你沒有適當
+  的存取權限」**:用 ZIP 下載這個 repo(而不是 `git clone`)有時候會
+  讓 macOS 解壓縮時把 `.command` 檔案的「可執行」權限拔掉。解法:在
+  終端機裡執行一次 `chmod +x script/mac/*.command`,再重新雙擊——或者
+  乾脆改用打字執行的版本(`bash script/mac/...`),完全不需要這個
+  權限。
+- **PowerShell 出現「...is not recognized as the name of a cmdlet,
+  function, script file, or operable program」**:你大概打指令時漏了
+  開頭的 `.\`——PowerShell 要求明確指定才會執行目前資料夾裡的東西
+  (跟 Command Prompt 不一樣),就算路徑裡已經有子資料夾也一樣。檢查
+  一下你的指令是不是跟上面寫的一樣,以 `.\` 開頭。
 - **下載 toy data 時出現「Too Many Requests」或 gateway timeout**:
   Zenodo(toy data 放的地方)是公開的共用服務,偶爾會做速率限制或
   逾時,尤其是同一個網路裡很多人同時執行 setup 的時候(例如 workshop
@@ -177,5 +195,5 @@ venv/bin/python script/step2_run_native_tissue.py    # Mac/Linux 也可以這樣
   程度。解法:把整個 `venv` 資料夾刪掉,重跑一次 Step 1 讓它重新建立。
   如果一直發生,把這個資料夾搬到雲端同步範圍以外。
 - **其他看起來怪怪的地方**:重新執行一次 Step 1
-  (`bash script/mac/step1_setup.sh` / `script\windows\step1_setup.bat`)
+  (`bash script/mac/step1_setup.sh` / `.\script\windows\step1_setup.bat`)
   ——重複執行很安全,它會清楚重新回報到底缺什麼。

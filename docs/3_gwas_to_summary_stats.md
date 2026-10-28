@@ -72,6 +72,15 @@ a test statistic (e.g. Z-score or odds ratio), and a p-value. That table
 `step2_run_native_tissue.py`/`step2_run_native_tissue.sh` reads in this workshop, just for a real
 trait and a real (QC'd, imputed) cohort instead of the toy setup here.
 
+(The toy file's own name decodes this whole pipeline:
+`chr10_imputed_gwas.pheno.glm.logistic.hybrid` — `chr10` is the
+chromosome, `imputed` flags that it went through the imputation step
+above, and `glm.logistic.hybrid` is PLINK2's standard output suffix
+for its `--glm` association test on a binary/case-control trait:
+logistic regression, using PLINK2's default "hybrid" algorithm, which
+falls back to Firth-bias-corrected logistic regression for variants
+where plain logistic regression doesn't converge well.)
+
 ## Want the real, detailed version?
 
 This page is deliberately a conceptual overview, not a command-by-command

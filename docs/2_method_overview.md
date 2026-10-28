@@ -6,6 +6,29 @@ Does a gene's *genetically predicted* expression level associate with a
 trait? That's what a transcriptome-wide association study (TWAS) tests —
 and **S-PrediXcan** is the specific tool we use to answer it.
 
+## The big picture
+
+The rest of this page explains each piece in detail — here's how they
+all fit together first:
+
+```
+   [GTEx reference panel]
+   (real genotypes + real measured expression, same people)
+             │
+             ▼  (Elastic Net training — done once, ahead of time,
+             │   not something this workshop runs)
+   [weight model: en_<tissue>.db + its covariance file]
+             │
+             │            [your GWAS summary statistics]
+             │                       │
+             └───────────┬───────────┘
+                         ▼
+                  [S-PrediXcan]
+                         │
+                         ▼
+       [one row per gene: zscore, pvalue, ...]
+```
+
 ## Why "predicted" expression, not measured expression
 
 Measuring actual gene expression requires tissue samples, which most
@@ -70,7 +93,9 @@ ends up in that track's `predict.txt` output.
   for the statistics to be valid)
 - the **GWAS summary statistics** for one chromosome
   (`gwas_ss/chr10_imputed_gwas...hybrid`) — real SNP-level association
-  results, no individual genotypes
+  results, no individual genotypes (curious how raw genotyped samples
+  turn into a file like this? see
+  [`3_gwas_to_summary_stats.md`](./3_gwas_to_summary_stats.md))
 - the sample size the GWAS was run on (`--gwas_N`)
 
 For each gene the weight model covers (that also has SNP overlap with the
@@ -119,6 +144,30 @@ GWAS result has one per SNP. If you want to visualize results by genomic
 position (e.g. a Manhattan-style plot), you'd need to look up each gene's
 coordinates separately (e.g. via Ensembl/gencode).
 
+## How do I pick out a meaningful gene?
+
+With a few hundred or thousand rows, staring at the raw CSV isn't much
+help. These three checks aren't a strict pass/fail rule, but a
+reasonable way to tell "worth a closer look" from "probably noise":
+
+1. **Is the model itself any good for this gene?** Check
+   `pred_perf_pval < 0.05` and `pred_perf_r2 > 0.01` — i.e. the weight
+   model actually predicted real expression reasonably well back when
+   it was trained. If it couldn't do that on its own training data,
+   its prediction on your GWAS isn't trustworthy either.
+2. **Is the GWAS association itself strong enough?** A common
+   convention is a transcriptome-wide Bonferroni cutoff:
+   `0.05 / (number of genes actually tested)`. The often-quoted
+   figure of about `2.5e-6` assumes testing close to the full
+   ~20,000-gene transcriptome — **this workshop's toy run tests far
+   fewer genes** (count the rows in your own output CSV), so that
+   figure is stricter than it needs to be here. Compute your own
+   cutoff from your own row count rather than copying `2.5e-6` as-is.
+3. **Is the result resting on enough SNPs?** Check `n_snps_used` isn't
+   tiny (e.g. 1) — a result built on a single SNP is really just that
+   one SNP's GWAS signal wearing a gene's name, not a genuinely
+   multi-SNP prediction.
+
 ## The big caveat
 
 A significant result here means the *predicted* expression of that gene
@@ -129,15 +178,9 @@ underlying SNPs (linkage disequilibrium), so a TWAS hit can point at the
 methods exist specifically to address this (checking whether the GWAS and
 eQTL signals really do share the same causal variant) — out of scope for
 this session, but worth knowing this is a starting point, not a final
-answer. See [`causal_followup_methods.md`](./causal_followup_methods.md)
+answer. See [`4_causal_followup_methods.md`](./4_causal_followup_methods.md)
 for a plain-language introduction to those methods (MR, COLOC, SuSiE), if
 you're curious what comes next.
-
-## Where did the input GWAS file come from?
-
-This workshop starts from an already-computed summary-statistics file.
-See [`gwas_to_summary_stats.md`](./gwas_to_summary_stats.md) if you want
-to understand how raw genotyped samples turn into that file.
 
 ## What about the optional cell-type track?
 
@@ -152,6 +195,13 @@ nearby SNPs is exactly what a multi-SNP prediction model relies on, so
 without it, predicted expression here is close to statistical noise by
 design. This track exists to show the individual-level pipeline running
 end-to-end, not to demonstrate a real biological signal.
+
+This track covers one cell type, `CD14-positive_monocyte` — when you
+run it, you'll see a line like `Skipping plasmablast — no synthetic
+genotype data for it yet`. That's expected, not an error: a second
+cell type (`plasmablast`) is listed in `celltype.txt` for future use,
+but doesn't have synthetic genotype data generated for it yet, so the
+script skips it gracefully instead of failing.
 
 ### Reading the cell-type output
 

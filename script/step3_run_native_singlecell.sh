@@ -14,7 +14,7 @@ set -e
 # expression from this run will be close to statistical noise. This
 # demonstrates the pipeline running end-to-end on an individual-level
 # genotype input — it is NOT a real biological finding. See
-# docs/method_overview.md.
+# docs/2_method_overview.md.
 #
 # Calls the venv's python explicitly (not bare "python" off PATH,
 # which can resolve to an unrelated install and silently skip the
@@ -76,4 +76,4 @@ fi
 echo "==> Done — NOTE: this used SYNTHETIC genotype data with no real"
 echo "    linkage structure, so results are close to statistical noise"
 echo "    by design (demonstrates the pipeline running end-to-end, not a"
-echo "    real biological finding). See docs/method_overview.md."
+echo "    real biological finding). See docs/2_method_overview.md."

@@ -14,7 +14,7 @@ condition, out of the ~20,000 genes in the human genome.
 The method behind this is called a **TWAS** (transcriptome-wide
 association study). The specific tool you'll run is called
 **S-PrediXcan**. You don't need to know how either works to complete
-this workshop — [`docs/method_overview.md`](./docs/method_overview.md)
+this workshop — [`docs/2_method_overview.md`](./docs/2_method_overview.md)
 explains the method itself in plain language, if you're curious, once
 you've got it running.
 
@@ -23,18 +23,45 @@ gene's genetically **predicted** expression is associated with a trait,
 using GWAS summary statistics — no lab measurements or individual
 genetic data required.)*
 
+## Quick version
+
+For anyone already comfortable with a terminal: download this repo
+(click the green **`<> Code`** button above → **`Download ZIP`** →
+unzip it — or `git clone` it, if you use git), `cd` into the unzipped
+folder, then:
+```bash
+bash script/mac/step1_setup.sh             # Step 1: checks Python, venv, install, data, check
+bash script/step2_run_native_tissue.sh     # Step 2: or venv/bin/python script/step2_run_native_tissue.py
+bash script/step3_run_native_singlecell.sh # Step 3 (optional): cell-type track, synthetic data
+```
+Windows: `.\script\windows\step1_setup.bat` then
+`.\venv\Scripts\python.exe script\step2_run_native_tissue.py` (the
+leading `.\` is required in PowerShell, even for a path like this one
+— see [`docs/1_native_setup_guide.md`](./docs/1_native_setup_guide.md)'s
+Troubleshooting section if you forget it).
+
+Package set (see `requirements.txt`): `numpy<2.0`, `pandas<2.0`, `scipy`,
+`patsy`, `h5py`, `sqlalchemy<2.0`, `pyliftover`, `statsmodels`. The
+toolkit (`tools/MetaXcan-master/software/`) ships in the repo; the toy
+weight models (~130MB) and the GWAS file (~31MB) both download
+automatically from Zenodo.
+
+New to the command line, or want each step explained? Skip to
+[Get Started](#get-started) below instead.
+
 ## Get Started
 
 **New to the command line, or unsure how to even download this?** Start
-at [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) — it
+at [`docs/1_native_setup_guide.md`](./docs/1_native_setup_guide.md) — it
 walks through everything from zero: downloading this repo, opening a
 terminal, and running the setup script. Works on Mac, Windows, and
-Linux.
+Linux. (Already comfortable with a terminal? See
+[Quick version](#quick-version) above instead.)
 
 **Before Step 1**: download this repo (click the green **`<> Code`**
 button above → **`Download ZIP`**, then unzip it — or `git clone` it,
 if you already use git) and open a terminal in the unzipped folder
-(see [`docs/native_setup_guide.md`](./docs/native_setup_guide.md) if
+(see [`docs/1_native_setup_guide.md`](./docs/1_native_setup_guide.md) if
 you're not sure how).
 
 ### Step 1 — Set up (run once)
@@ -46,8 +73,13 @@ bash script/mac/step1_setup.sh       # one script: checks Python, creates a
 ```
 **Windows**:
 ```powershell
-script\windows\step1_setup.bat
+.\script\windows\step1_setup.bat
 ```
+*(The leading `.\` is required in PowerShell, even for a path with
+subfolders already in it like this one — see
+[`docs/1_native_setup_guide.md`](./docs/1_native_setup_guide.md)'s
+Troubleshooting section if you forget it and see a "not recognized"
+error.)*
 
 ### Step 2 — Run the main analysis (tissue-level)
 **Mac**:
@@ -56,7 +88,7 @@ bash script/step2_run_native_tissue.sh
 ```
 **Windows**:
 ```powershell
-venv\Scripts\python.exe script\step2_run_native_tissue.py
+.\venv\Scripts\python.exe script\step2_run_native_tissue.py
 ```
 
 ### Step 3 — Optional: the cell-type track
@@ -66,7 +98,7 @@ bash script/step3_run_native_singlecell.sh
 ```
 **Windows**:
 ```powershell
-venv\Scripts\python.exe script\step3_run_native_singlecell.py
+.\venv\Scripts\python.exe script\step3_run_native_singlecell.py
 ```
 See [below](#optional-the-cell-type-track) for what this track actually
 is before you run it.
@@ -93,7 +125,7 @@ using real (de-identified, summary-level) genetic data for one human
 chromosome. For each tissue, you'll get back a table listing genes and
 how strongly each one's activity level is linked to the trait being
 studied — the higher the significance, the more that gene stands out as
-worth a closer look. [`docs/method_overview.md`](./docs/method_overview.md)
+worth a closer look. [`docs/2_method_overview.md`](./docs/2_method_overview.md)
 explains exactly how to read that output table once you have it.
 
 **How do I know it worked?** Compare your results against the reference
@@ -122,13 +154,13 @@ your own `out/CD14-positive_monocyte_*` files against it the same way.
 
 ## What's In This Folder
 
-- `docs/native_setup_guide.md` — full setup walkthrough (start here)
-- `docs/method_overview.md` — what this analysis does and how to read
+- `docs/1_native_setup_guide.md` — full setup walkthrough (start here)
+- `docs/2_method_overview.md` — what this analysis does and how to read
   the results, in plain language
-- `docs/gwas_to_summary_stats.md` — additional info: where the input
+- `docs/3_gwas_to_summary_stats.md` — additional info: where the input
   GWAS file itself comes from (raw genotypes → QC → imputation →
   summary statistics)
-- `docs/causal_followup_methods.md` — additional info: what comes after
+- `docs/4_causal_followup_methods.md` — additional info: what comes after
   a TWAS hit (MR, COLOC, SuSiE)
 - `script/mac/step1_setup.sh` (+ `.command`) / `script/windows/step1_setup.bat`
   — Step 1: one-step setup

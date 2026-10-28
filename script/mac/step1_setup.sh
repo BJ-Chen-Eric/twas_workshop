@@ -3,7 +3,7 @@
 # install Homebrew (if needed) then Python via Homebrew, each gated by a
 # y/n (both need your password). Then hands off to script/step1_setup.py.
 # UNTESTED as of 2026-09-21 (no live runs on Eric's machine) — verify
-# before relying on it. See docs/native_setup_guide.md.
+# before relying on it. See docs/1_native_setup_guide.md.
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -16,7 +16,7 @@ manual_instructions() {
     echo "   and download the macOS installer (Python 3.11 — recommended:"
     echo "   pandas has a ready-made package for it, so setup doesn't need"
     echo "   to compile anything. Newer Pythons work too, just slower to"
-    echo "   set up the first time — see docs/native_setup_guide.md)."
+    echo "   set up the first time — see docs/1_native_setup_guide.md)."
     echo "2. Run the installer, following the prompts."
     echo "3. Close this terminal, open a new one, and run this script again:"
     echo "     bash script/mac/step1_setup.sh"

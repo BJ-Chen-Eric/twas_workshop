@@ -15,7 +15,7 @@ REM when 3.12+ was already on PATH -- fixed the same day after a real
 REM run showed the gap. Then runs script\step1_setup.py. This logic is NOT
 REM hands-on verified on Windows (no Windows machine available) -- the
 REM underlying pandas build failure it works around IS confirmed real.
-REM See docs/native_setup_guide.md. Double-clickable, or run from
+REM See docs/1_native_setup_guide.md. Double-clickable, or run from
 REM PowerShell/Command Prompt: script\windows\step1_setup.bat
 
 cd /d "%~dp0..\.."
@@ -54,7 +54,7 @@ echo    download the Windows installer for Python 3.11 -- recommended:
 echo    pandas has a ready-made package for it, so setup doesn't need to
 echo    compile anything. Newer Pythons (3.12+) can also need a C/C++
 echo    compiler (Microsoft C++ Build Tools) to finish setup, which most
-echo    computers don't have -- see docs/native_setup_guide.md.
+echo    computers don't have -- see docs/1_native_setup_guide.md.
 echo 2. Run the installer. ON THE FIRST SCREEN, CHECK THE BOX THAT SAYS
 echo    "Add python.exe to PATH" -- this is the step almost everyone
 echo    misses, and without it this script will keep failing.
@@ -123,7 +123,7 @@ echo.
 echo ==================================================================
 echo %PYVER% is installed, but this workshop needs Python 3.11 to avoid
 echo a pandas build failure that needs a C/C++ compiler most computers
-echo don't have (see docs/native_setup_guide.md).
+echo don't have (see docs/1_native_setup_guide.md).
 echo.
 echo 1. Go to https://www.python.org/downloads/release/python-3119/ and
 echo    download the Windows installer for Python 3.11.

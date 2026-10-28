@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run this after creating/activating your virtual environment and
-`pip install -r requirements.txt` (see docs/native_setup_guide.md).
+`pip install -r requirements.txt` (see docs/1_native_setup_guide.md).
 Checks that everything needed for the workshop is importable and present,
 the same idea as the reference template's 00_student_setup script — no
 'am I ready?' guesswork.
@@ -19,6 +19,11 @@ import sys
 # reasoning if this needs revisiting.
 REQUIRED_MODULES = [
     "numpy", "pandas", "scipy", "patsy", "h5py", "sqlalchemy",
+    # pyliftover/statsmodels are only needed for the individual-level
+    # PrediXcan.py path (the cell-type track) — traced via actual
+    # imports in Predict.py/PrediXcanAssociation.py, see
+    # requirements.txt's comment for the full story.
+    "pyliftover", "statsmodels",
 ]
 
 TOOLKIT_PATH = os.path.join("tools", "MetaXcan-master", "software", "SPrediXcan.py")
@@ -30,6 +35,11 @@ EXPECTED_DATA = [
     os.path.join("tissue_twas_weight", "en_Whole_Blood.txt.gz"),
     os.path.join("gwas_ss", "chr10_imputed_gwas.pheno.glm.logistic.hybrid"),
     "tissue.txt",
+    # Cell-type track data — downloaded by step1_setup.py alongside the
+    # tissue-level files above, but previously missing from this check.
+    os.path.join("celltype_twas_weight", "CD14-positive_monocyte.db"),
+    os.path.join("celltype_twas_weight", "plasmablast.db"),
+    "celltype.txt",
 ]
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Double-click version of step1_setup.sh (same folder). Keeps the
-# window open so you can see the result. See docs/native_setup_guide.md
+# window open so you can see the result. See docs/1_native_setup_guide.md
 # if double-clicking doesn't work (right-click → Open → confirm).
 cd "$(dirname "$0")"
 bash step1_setup.sh

@@ -3,9 +3,9 @@
 # Pin rationale: numpy 2.x / pandas 2.x break the MetaXcan-vintage
 # codebase (see docs/twas_pipeline_reference.md).
 # RESOLVED 2026-09-30 (was: pandas 1.5.3 build failure on Python 3.12+,
-# see script/setup.py's install_requirements() for the pkg_resources/
-# Cython fix — confirmed working via Eric's real run: numpy, pandas,
-# scipy, patsy, h5py, sqlalchemy all import fine now).
+# see script/step1_setup.py's install_requirements() for the
+# pkg_resources/Cython fix — confirmed working via Eric's real run:
+# numpy, pandas, scipy, patsy, h5py, sqlalchemy all import fine now).
 #
 # REMOVED 2026-09-30: bgen-reader, cyvcf2 (and dask, bgen-reader's
 # transitive dependency). Traced every import in
@@ -14,8 +14,9 @@
 # cyvcf2, or the genotype-reading module that needs them
 # (metax/genotype/BGENGenotype.py). Those two packages are only for
 # individual-level PrediXcan.py's BGEN/VCF genotype input, which the
-# toy workshop's summary-stat path (run_native.py/.sh, only ever calling
-# SPrediXcan.py) never uses. Confirmed via a real, live install attempt
+# toy workshop's summary-stat path (step2_run_native_tissue.py/.sh,
+# only ever calling SPrediXcan.py) never uses. Confirmed via a real,
+# live install attempt
 # that neither can actually work here anyway: dask 2024.8.0's
 # dask.dataframe has a hard runtime check requiring pandas>=2.0.0 (not
 # just a pip-metadata mismatch — verified by direct import, it raises
@@ -34,7 +35,7 @@
 # BECAUSE it avoids cyvcf2 (still broken, see above) and bgen-reader
 # entirely. That path's other real imports (traced via Predict.py /
 # PrediXcanAssociation.py) are pyliftover and statsmodels — added
-# below. CONFIRMED working end-to-end: ran script/run_native_singlecell.py
+# below. CONFIRMED working end-to-end: ran script/step3_run_native_singlecell.py
 # for real against the actual CD14-positive_monocyte weight model +
 # synthetic genotype data, got real association output (45 genes).
 #
@@ -48,7 +49,7 @@
 # version: '1.5.3 2'"). Not a code bug — a real hazard of venvs living
 # in any cloud-synced folder (Dropbox/OneDrive/Google Drive/iCloud).
 # Fixed by deleting and rebuilding the venv from scratch; see
-# docs/native_setup_guide.md's Troubleshooting section for the
+# docs/1_native_setup_guide.md's Troubleshooting section for the
 # participant-facing note.
 numpy<2.0
 pandas<2.0
